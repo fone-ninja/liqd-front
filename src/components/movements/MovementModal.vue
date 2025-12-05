@@ -48,11 +48,6 @@ const CRYPTO = {
     v-model:visible="model"
     modal
     :style="{ width: '30rem', backgroundColor: '#181818' }"
-    :dt="{
-      header: {
-        color: 'red',
-      },
-    }"
     :pt="{
       header: {
         class: 'p-0! border-b border-surface-500',

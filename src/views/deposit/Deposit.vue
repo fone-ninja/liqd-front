@@ -136,16 +136,18 @@ await getProfile();
 
       <div class="flex flex-1">
         <div class="bg-[#111111] p-6 rounded-lg w-full">
-          <div class="flex h-full w-full">
+          <div class="flex flex-col lg:flex-row h-full w-full">
             <div
-              class="flex items-center justify-center w-1/2 border-r border-gray-600"
+              class="flex w-full lg:w-1/2 items-center justify-center border-gray-600 pt-8 lg:pt-0 lg:border-r lg:border-b-0 order-2 lg:order-1 mb-6 lg:mb-0"
             >
               <div>
                 <img :src="qrcode" alt="QR Code" class="rounded-lg h-[180px]" />
               </div>
             </div>
 
-            <div class="w-1/2">
+            <div
+              class="w-full lg:w-1/2 border-b lg:border-0 border-gray-600 order-1 lg:order-2"
+            >
               <div class="flex flex-col p-6">
                 <div class="flex items-center gap-3">
                   <img

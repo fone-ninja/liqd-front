@@ -69,7 +69,7 @@ const signout = async () => {
   width: 100%;
   background-color: #111111;
   border-top: 1px solid var(--color-border);
-  padding: 0 64px;
+  padding: 0 52px;
   height: 64px;
   z-index: 1;
 }

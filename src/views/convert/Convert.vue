@@ -113,7 +113,14 @@ await getProfile();
           <div
             class="flex gap-4 border-b border-gray-400 pb-8 mb-4 justify-between"
           >
-            <InputNumber placeholder="Price" class="w-1/2" />
+            <InputNumber
+              placeholder="Price"
+              class="flex-1 lg:w-1/2"
+              :pt="{
+                root: { class: 'min-w-[140px]!' },
+                pcinputtext: { root: { class: 'min-w-[140px]!' } },
+              }"
+            />
             <MovementCrypto crypto="brl" />
           </div>
 
@@ -137,7 +144,14 @@ await getProfile();
           <div
             class="flex gap-4 border-b border-gray-400 pb-8 mb-4 justify-between"
           >
-            <InputNumber placeholder="Price" class="w-1/2" />
+            <InputNumber
+              placeholder="Price"
+              class="flex-1 lg:w-1/2"
+              :pt="{
+                root: { class: 'min-w-[140px]!' },
+                pcinputtext: { root: { class: 'min-w-[140px]!' } },
+              }"
+            />
             <MovementCrypto crypto="usdt" />
           </div>
 
