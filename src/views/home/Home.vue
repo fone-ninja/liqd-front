@@ -93,8 +93,8 @@ await getProfile();
       <b class="text-white pb-2 border-b-2 border-white">Home</b>
     </h1>
 
-    <div class="flex gap-4">
-      <div class="mt-12 w-[400px] bg-[#111111] p-6 rounded-lg">
+    <div class="flex flex-col lg:flex-row gap-4 mt-12">
+      <div class="w-full lg:w-[400px] bg-[#111111] p-6 rounded-lg">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2">
             <img
@@ -114,7 +114,7 @@ await getProfile();
         </div>
       </div>
 
-      <div class="mt-12 flex-1 bg-[#111111] p-6 rounded-lg">
+      <div class="flex-1 bg-[#111111] p-6 rounded-lg">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2">
             <h3 class="text-lg font-bold text-white">Cotação LIQD</h3>

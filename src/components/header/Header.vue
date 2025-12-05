@@ -88,7 +88,7 @@ const toggle = (event) => {
     </div>
 
     <div class="flex items-center">
-      <div class="flex gap-4">
+      <div class="hidden lg:flex gap-4">
         <div class="flex flex-col border-r border-white-500 pr-4">
           <span class="text-sm text-white font-semibold">USDT Compra</span>
           <div class="flex items-center gap-1">

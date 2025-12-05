@@ -48,6 +48,7 @@ declare module 'vue' {
     ScanContainer: typeof import('./src/components/scan/ScanContainer.vue')['default']
     SeveralScan: typeof import('./src/components/scan/SeveralScan.vue')['default']
     Sidebar: typeof import('./src/components/sidebar/Sidebar.vue')['default']
+    Tabbar: typeof import('./src/components/tabbar/Tabbar.vue')['default']
     Tag: typeof import('primevue/tag')['default']
     Textarea: typeof import('primevue/textarea')['default']
     TheWelcome: typeof import('./src/components/TheWelcome.vue')['default']

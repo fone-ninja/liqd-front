@@ -99,8 +99,8 @@ await getProfile();
       <b class="text-white pb-2 border-b-2 border-white">Sacar</b>
     </h1>
 
-    <div class="flex gap-4 mt-12 w-full">
-      <div class="flex-shrink-0 w-4/12 bg-[#111111] p-6 rounded-lg">
+    <div class="flex flex-col lg:flex-row gap-4 mt-12 w-full">
+      <div class="flex-shrink-0 w-full lg:w-4/12 bg-[#111111] p-6 rounded-lg">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2">
             <h3 class="text-lg font-bold text-white">Deposite seu dinheiro</h3>

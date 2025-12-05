@@ -16,6 +16,7 @@ import {
   PhArrowRight,
   PhHandWithdraw,
   PhArrowsHorizontal,
+  PhArrowsDownUp,
   PhFile,
 } from "@phosphor-icons/vue";
 import dayjs from "dayjs";
@@ -107,7 +108,7 @@ await getProfile();
     </h1>
 
     <div class="mt-12 w-full">
-      <div class="flex gap-4">
+      <div class="flex flex-col lg:flex-row gap-4">
         <div class="bg-[#111111] p-6 rounded-lg flex-1">
           <div
             class="flex gap-4 border-b border-gray-400 pb-8 mb-4 justify-between"
@@ -127,7 +128,8 @@ await getProfile();
 
         <div class="px-4">
           <div class="flex items-center justify-center h-full">
-            <PhArrowsHorizontal size="32" class="text-white" />
+            <PhArrowsHorizontal size="32" class="text-white hidden lg:block" />
+            <PhArrowsDownUp size="32" class="text-white block lg:hidden" />
           </div>
         </div>
 
@@ -149,7 +151,14 @@ await getProfile();
         </div>
       </div>
 
-      <p class="mt-2 text-sm">Valor mínimo: R$25,00</p>
+      <p class="mt-1 text-xs">Valor mínimo: R$25,00</p>
+
+      <Button
+        size="small"
+        label="Converter"
+        class="mt-4 min-w-[130px]"
+        @click="goToSignin"
+      />
     </div>
 
     <div>
