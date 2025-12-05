@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import * as authService from "@/services/auth/authService";
 import {
   PhBook,
@@ -14,7 +14,13 @@ import logo from "../../../public/logo.png";
 
 const router = useRouter();
 
-const goTo = (routeName) => {
+const route = useRoute();
+
+const isSelected = (routeName: string) => {
+  return String(route.name) === routeName;
+};
+
+const goTo = (routeName: string) => {
   router.push({ name: routeName });
 };
 
@@ -37,7 +43,10 @@ const signout = async () => {
         </div>
 
         <ul>
-          <li class="flex items-center gap-2" @click="goTo('home')">
+          <li
+            :class="['flex items-center gap-2', { active: isSelected('home') }]"
+            @click="goTo('home')"
+          >
             <PhHouse :size="16" weight="fill" class="item-icon" />
             <span class="item-text">Home</span>
           </li>
@@ -50,15 +59,33 @@ const signout = async () => {
         </div>
 
         <ul>
-          <li class="flex items-center gap-2" @click="goTo('deposit')">
+          <li
+            :class="[
+              'flex items-center gap-2',
+              { active: isSelected('deposit') },
+            ]"
+            @click="goTo('deposit')"
+          >
             <PhHandDeposit :size="16" weight="fill" class="item-icon" />
             <span class="item-text">Depositar</span>
           </li>
-          <li class="flex items-center gap-2" @click="goTo('convert')">
+          <li
+            :class="[
+              'flex items-center gap-2',
+              { active: isSelected('convert') },
+            ]"
+            @click="goTo('convert')"
+          >
             <PhCoins :size="16" weight="fill" class="item-icon" />
             <span class="item-text">Converter</span>
           </li>
-          <li class="flex items-center gap-2" @click="goTo('withdraw')">
+          <li
+            :class="[
+              'flex items-center gap-2',
+              { active: isSelected('withdraw') },
+            ]"
+            @click="goTo('withdraw')"
+          >
             <PhHandWithdraw :size="16" weight="fill" class="item-icon" />
             <span class="item-text">Sacar</span>
           </li>
@@ -102,7 +129,8 @@ li {
   display: flex;
 }
 
-li:hover {
+li:hover,
+li.active {
   cursor: pointer;
   background-color: #111111;
   border-radius: 8px;
