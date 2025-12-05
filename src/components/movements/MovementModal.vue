@@ -47,7 +47,7 @@ const CRYPTO = {
   <Dialog
     v-model:visible="model"
     modal
-    :style="{ width: '30rem', backgroundColor: '#181818' }"
+    :style="{ width: '30rem', backgroundColor: '#181818', margin: '0 8px' }"
     :pt="{
       header: {
         class: 'p-0! border-b border-surface-500',

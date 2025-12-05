@@ -11,7 +11,7 @@ import Loading from "@/components/fallback/Loading.vue";
       <div class="flex flex-col h-screen">
         <Header />
         <div class="flex flex-1 pb-[64px]! lg:pb-0!">
-          <Sidebar class="hidden! lg:block!" />
+          <Sidebar class="hidden! lg:flex!" />
           <main class="main-content">
             <RouterView />
           </main>
