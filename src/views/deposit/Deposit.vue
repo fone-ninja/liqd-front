@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, nextTick, shallowRef } from "vue";
 import useUser from "@/use/useUser/useUser.ts";
 import MovementTag from "@/components/movements/MovementTag.vue";
 import MovementCrypto from "@/components/movements/MovementCrypto.vue";
@@ -14,17 +14,17 @@ import {
   PhArrowDown,
   PhArrowRight,
   PhFile,
+  PhPlus,
 } from "@phosphor-icons/vue";
 import dayjs from "dayjs";
 import { useQRCode } from "@vueuse/integrations/useQRCode";
 
-const qrcode = useQRCode("text-to-encode");
+const pixQrCode = shallowRef("");
+const qrcode = useQRCode(pixQrCode);
+const qrcodeLoading = ref(false);
 
 const showMovementModal = ref(false);
 const movement = ref(null);
-const pixQrCode = ref(
-  "00020126360014BR.GOV.BCB.PIX0136+55119999999952040000530398654041000062070503***6304B14F"
-);
 
 const products = [
   {
@@ -38,7 +38,7 @@ const products = [
     inventoryStatus: "INSTOCK",
     type: "deposit",
     date: "2018-04-04T16:00:00.000Z",
-    crypto: "usdt",
+    crypto: "brl",
   },
   {
     id: "1001",
@@ -66,7 +66,7 @@ const products = [
     rating: 4,
     type: "deposit",
     date: "2018-04-04T16:00:00.000Z",
-    crypto: "usdt",
+    crypto: "brl",
   },
 ];
 
@@ -76,6 +76,20 @@ const getFormatDate = (dateStr: string) => {
 
 const getFormatTime = (dateStr: string) => {
   return dayjs(dateStr).format("HH:mm");
+};
+
+const generateQRCode = async () => {
+  qrcodeLoading.value = true;
+  await new Promise<void>(async (resolve) => {
+    setTimeout(() => {
+      resolve();
+    }, 3000);
+  });
+
+  pixQrCode.value =
+    "00020126360014BR.GOV.BCB.PIX0136+55119999999952040000530398654041000062070503***6304B14F";
+  qrcode.value = pixQrCode.value;
+  qrcodeLoading.value = false;
 };
 
 const { getUser, user } = useUser();
@@ -124,7 +138,7 @@ await getProfile();
           </div>
 
           <div class="mt-8">
-            <Button size="small" label="Prosseguir">
+            <Button size="small" label="Prosseguir" @click="generateQRCode">
               <div class="flex items-center gap-4">
                 <span class="font-semibold">Prosseguir</span>
                 <PhArrowRight :size="20" weight="fill" />
@@ -136,7 +150,37 @@ await getProfile();
 
       <div class="flex flex-1">
         <div class="bg-[#111111] p-6 rounded-lg w-full">
-          <div class="flex flex-col lg:flex-row h-full w-full">
+          <div
+            v-if="!pixQrCode && !qrcodeLoading"
+            class="flex flex-col items-center justify-center p-6 h-full"
+          >
+            <div
+              class="flex items-center justify-center w-14 h-14 rounded-full bg-gray-400/10 mb-6"
+            >
+              <PhPlus :size="28" />
+            </div>
+
+            <h3 class="font-bold text-lg text-white mb-2">
+              Pronto para gerar QR Code
+            </h3>
+
+            <p>
+              Selecione a moeda e método de pagamento, depois clique em
+              "Prosseguir".
+            </p>
+          </div>
+
+          <div
+            v-if="qrcodeLoading"
+            class="flex items-center justify-center h-full"
+          >
+            <ProgressSpinner strokeWidth="2" class="w-20! h-20!" />
+          </div>
+
+          <div
+            v-if="pixQrCode && !qrcodeLoading"
+            class="flex flex-col lg:flex-row h-full w-full"
+          >
             <div
               class="flex w-full lg:w-1/2 items-center justify-center border-gray-600 pt-8 lg:pt-0 lg:border-r lg:border-b-0 order-2 lg:order-1 mb-6 lg:mb-0"
             >

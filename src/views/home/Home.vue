@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted, onUnmounted, nextTick } from "vue";
 import useUser from "@/use/useUser/useUser.ts";
 import MovementTag from "@/components/movements/MovementTag.vue";
 import MovementCrypto from "@/components/movements/MovementCrypto.vue";
@@ -64,6 +64,70 @@ const products = [
 const showMovementModal = ref(false);
 const movement = ref(null);
 
+const spinnerProgress = ref(0);
+const valueRef = ref<HTMLElement | null>(null);
+const barWidth = ref("130px");
+
+const quoteValue = ref<number>(252222.0);
+const formatCurrency = (value: number) => {
+  return `R$ ${Number(value).toLocaleString("pt-BR", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })}`;
+};
+
+let spinnerInterval: ReturnType<typeof setInterval> | null = null;
+let requestInterval: ReturnType<typeof setInterval> | null = null;
+
+const updateBarWidth = () => {
+  if (valueRef.value) {
+    barWidth.value = valueRef.value.offsetWidth + "px";
+  }
+};
+
+const fetchQuote = async () => {
+  return new Promise<void>((resolve) => {
+    setTimeout(async () => {
+      const mock = (Math.random() * (50000 - 10) + 10).toFixed(2);
+      const mockQuote = Number(mock);
+
+      quoteValue.value = mockQuote;
+
+      await nextTick();
+      updateBarWidth();
+      resolve();
+    }, 500);
+  });
+};
+
+const startSpinner = () => {
+  if (spinnerInterval) clearInterval(spinnerInterval);
+  if (requestInterval) clearInterval(requestInterval);
+
+  spinnerProgress.value = 0;
+  let elapsed = 0;
+
+  spinnerInterval = setInterval(() => {
+    elapsed += 50;
+    spinnerProgress.value = (elapsed % 12000) / 12000;
+  }, 50);
+
+  requestInterval = setInterval(() => {
+    fetchQuote();
+  }, 12000);
+};
+
+const stopSpinner = () => {
+  if (spinnerInterval) {
+    clearInterval(spinnerInterval);
+    spinnerInterval = null;
+  }
+  if (requestInterval) {
+    clearInterval(requestInterval);
+    requestInterval = null;
+  }
+};
+
 const getFormatDate = (dateStr: string) => {
   return dayjs(dateStr).format("DD MMM. YYYY").toLowerCase();
 };
@@ -83,6 +147,17 @@ const getProfile = async () => {
 };
 
 await getProfile();
+
+onMounted(() => {
+  updateBarWidth();
+  startSpinner();
+  window.addEventListener("resize", updateBarWidth);
+});
+
+onUnmounted(() => {
+  stopSpinner();
+  window.removeEventListener("resize", updateBarWidth);
+});
 </script>
 
 <template>
@@ -94,23 +169,47 @@ await getProfile();
     </h1>
 
     <div class="flex flex-col lg:flex-row gap-4 mt-12">
-      <div class="w-full lg:w-[400px] bg-[#111111] p-6 rounded-lg">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center gap-2">
-            <img
-              src="https://app.tcr.finance/img/home/flag_brazil.svg"
-              alt="br"
-            />
-            <h3 class="text-lg font-bold text-white">Saldo BRL</h3>
-          </div>
+      <div class="flex flex-col gap-2">
+        <div class="w-full lg:w-[400px] bg-[#111111] p-6 rounded-lg">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <img
+                src="https://app.tcr.finance/img/home/flag_brazil.svg"
+                alt="br"
+                class="w-6 h-6"
+              />
+              <h3 class="text-lg font-bold text-white">Saldo BRL</h3>
+            </div>
 
-          <div class="flex gap-4">
-            <PhEyeSlash :size="20" weight="fill" class="text-white" />
-            <PhArrowsClockwise :size="20" weight="fill" class="text-white" />
+            <div class="flex gap-4">
+              <PhEyeSlash :size="16" weight="fill" class="text-white" />
+              <PhArrowsClockwise :size="16" weight="fill" class="text-white" />
+            </div>
+          </div>
+          <div class="flex mt-4">
+            <span class="text-2xl text-white">R$ 5,00</span>
           </div>
         </div>
-        <div class="flex mt-4">
-          <span class="text-3xl text-white">R$ 5,00</span>
+
+        <div class="w-full lg:w-[400px] bg-[#111111] p-6 rounded-lg">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <img
+                src="https://app.tcr.finance/img/home/flag_usa.svg"
+                alt="us"
+                class="w-6 h-6"
+              />
+              <h3 class="text-lg font-bold text-white">Saldo USD</h3>
+            </div>
+
+            <div class="flex gap-4">
+              <PhEyeSlash :size="16" weight="fill" class="text-white" />
+              <PhArrowsClockwise :size="16" weight="fill" class="text-white" />
+            </div>
+          </div>
+          <div class="flex mt-4">
+            <span class="text-2xl text-white">R$ 5,00</span>
+          </div>
         </div>
       </div>
 
@@ -121,7 +220,7 @@ await getProfile();
           </div>
         </div>
         <div class="flex gap-12">
-          <div class="flex flex-col gap-2 mt-4">
+          <div class="flex flex-col gap-2 mt-6">
             <div class="rounded-full w-max px-2 py-1 bg-green-500/10 ml-[-2px]">
               <PhArrowUp
                 :size="14"
@@ -131,10 +230,30 @@ await getProfile();
               <span class="text-green-500 text-sm">Compra</span>
             </div>
 
-            <span class="text-3xl text-green-500"><b>R$ 5,00</b></span>
-            <small>Melhor preço para comprar USDT</small>
+            <div class="flex flex-col gap-2">
+              <div>
+                <span ref="valueRef" class="text-3xl text-green-500"
+                  ><b>{{ formatCurrency(quoteValue) }}</b></span
+                >
+                <div
+                  class="bg-gray-700 rounded-full h-2 overflow-hidden mt-2"
+                  :style="{ width: barWidth }"
+                >
+                  <div
+                    class="bg-green-500 h-full rounded-full transition-all"
+                    :style="{ width: spinnerProgress * 100 + '%' }"
+                  />
+                </div>
+              </div>
+            </div>
+            <small class="lg:w-full"
+              >O valor da cotação estará sendo atualizado a cada 12
+              segundos.</small
+            >
           </div>
-          <div class="flex flex-col gap-2 mt-4">
+
+          <!-- DISPONIBILIZAR QUANDO O BACK TIVER SUPORTE -->
+          <!-- <div class="flex flex-col gap-2 mt-4">
             <div class="rounded-full w-max px-2 py-1 bg-green-500/10 ml-[-2px]">
               <PhArrowDown
                 :size="14"
@@ -146,7 +265,7 @@ await getProfile();
 
             <span class="text-3xl text-red-500"><b>R$ 5,00</b></span>
             <small>Melhor preço para vender USDT</small>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>

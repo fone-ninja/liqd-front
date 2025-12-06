@@ -39,7 +39,7 @@ const amoountBRLShown = computed(() => {
 const signout = async () => {
   try {
     // await authService.signout();
-    router.push({ name: "signin" });
+    router.replace({ name: "signin" });
   } catch (error) {
     console.log(error);
   }
@@ -50,19 +50,6 @@ const items = ref([
   {
     label: "My profile",
     icon: markRaw(PhUser),
-  },
-  {
-    label: "My subscription",
-    icon: markRaw(PhMoney),
-  },
-  {
-    label: "Get a plan",
-    icon: markRaw(PhMoney),
-    badge: "PROMO",
-  },
-  {
-    label: "Settings",
-    icon: markRaw(PhGear),
   },
   {
     label: "Logout",
@@ -79,17 +66,22 @@ const items = ref([
 const toggle = (event) => {
   menu.value.toggle(event);
 };
+
+const goTo = (routeName: string) => {
+  router.push({ name: routeName });
+};
 </script>
 
 <template>
   <header>
-    <div>
+    <div @click="goTo('home')" class="cursor-pointer">
       <img :src="logo" alt="logo" class="w-[100px]" />
     </div>
 
     <div class="flex items-center">
       <div class="hidden lg:flex gap-4">
-        <div class="flex flex-col border-r border-white-500 pr-4">
+        <!-- DISPONIBILIZAR QUANDO TIVER SOCKET -->
+        <!-- <div class="flex flex-col">
           <span class="text-sm text-white font-semibold">USDT Compra</span>
           <div class="flex items-center gap-1">
             <span class="text-sm text-green-500">$ 3.000,00</span>
@@ -100,10 +92,11 @@ const toggle = (event) => {
               class="cursor-pointer"
             />
           </div>
-        </div>
+        </div> -->
 
-        <div class="flex flex-col">
-          <span class="text-sm text-white font-semibold">USDT Compra</span>
+        <!-- DISPONIBILIZAR QUANDO O BACK TIVER SUPORTE -->
+        <!-- <div class="flex flex-col border-l border-white-500 pl-4">
+          <span class="text-sm text-white font-semibold">USDT Venda</span>
           <div class="flex items-center gap-1">
             <span class="text-sm text-red-500">$ 3.000,00</span>
             <PhArrowClockwise
@@ -113,7 +106,7 @@ const toggle = (event) => {
               class="cursor-pointer"
             />
           </div>
-        </div>
+        </div> -->
 
         <div class="flex flex-col ml-4 justify-end">
           <span class="text-sm text-white font-semibold text-right"

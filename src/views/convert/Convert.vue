@@ -43,8 +43,8 @@ const products = [
     inventoryStatus: "INSTOCK",
     type: "convert",
     date: "2018-04-04T16:00:00.000Z",
-    cryptoFrom: "usdt",
-    cryptoTo: "brl",
+    cryptoFrom: "brl",
+    cryptoTo: "usdt",
   },
   {
     id: "1001",
@@ -58,8 +58,8 @@ const products = [
     rating: 4,
     type: "convert",
     date: "2018-04-04T16:00:00.000Z",
-    cryptoFrom: "usdt",
-    cryptoTo: "brl",
+    cryptoFrom: "brl",
+    cryptoTo: "usdt",
   },
   {
     id: "1001",
@@ -73,8 +73,8 @@ const products = [
     rating: 4,
     type: "convert",
     date: "2018-04-04T16:00:00.000Z",
-    cryptoFrom: "usdt",
-    cryptoTo: "brl",
+    cryptoFrom: "brl",
+    cryptoTo: "usdt",
   },
 ];
 
@@ -108,19 +108,67 @@ await getProfile();
     </h1>
 
     <div class="mt-12 w-full">
+      <div class="flex gap-2 mb-4">
+        <div class="w-full bg-[#111111] p-6 rounded-lg">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <img
+                src="https://app.tcr.finance/img/home/flag_brazil.svg"
+                alt="br"
+                class="w-6 h-6"
+              />
+              <h3 class="text-lg font-bold text-white">Saldo BRL</h3>
+            </div>
+
+            <div class="flex gap-4">
+              <PhEyeSlash :size="16" weight="fill" class="text-white" />
+              <PhArrowsClockwise :size="16" weight="fill" class="text-white" />
+            </div>
+          </div>
+          <div class="flex mt-4">
+            <span class="text-2xl text-white">R$ 5,00</span>
+          </div>
+        </div>
+
+        <div class="w-full bg-[#111111] p-6 rounded-lg">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <img
+                src="https://app.tcr.finance/img/home/flag_usa.svg"
+                alt="us"
+                class="w-6 h-6"
+              />
+              <h3 class="text-lg font-bold text-white">Saldo USD</h3>
+            </div>
+
+            <div class="flex gap-4">
+              <PhEyeSlash :size="16" weight="fill" class="text-white" />
+              <PhArrowsClockwise :size="16" weight="fill" class="text-white" />
+            </div>
+          </div>
+          <div class="flex mt-4">
+            <span class="text-2xl text-white">R$ 5,00</span>
+          </div>
+        </div>
+      </div>
+
       <div class="flex flex-col lg:flex-row gap-4">
         <div class="bg-[#111111] p-6 rounded-lg flex-1">
           <div
-            class="flex gap-4 border-b border-gray-400 pb-8 mb-4 justify-between"
+            class="flex gap-4 border-b border-gray-400 pb-8 mb-4 justify-between items-start"
           >
-            <InputNumber
-              placeholder="Price"
-              class="flex-1 lg:w-1/2"
-              :pt="{
-                root: { class: 'min-w-[140px]!' },
-                pcinputtext: { root: { class: 'min-w-[140px]!' } },
-              }"
-            />
+            <div class="lg:w-1/2">
+              <InputNumber
+                placeholder="Price"
+                class="flex-1 lg:flex-initial lg:w-full"
+                :pt="{
+                  root: { class: 'min-w-[100px]!' },
+                  pcinputtext: { root: { class: 'min-w-[100px]!' } },
+                }"
+              />
+              <p class="mt-1 text-xs">Valor mínimo: R$25,00</p>
+            </div>
+
             <MovementCrypto crypto="brl" />
           </div>
 
@@ -133,50 +181,67 @@ await getProfile();
           </div>
         </div>
 
-        <div class="px-4">
-          <div class="flex items-center justify-center h-full">
+        <div class="px-2">
+          <div class="flex flex-col items-center justify-center h-full">
             <PhArrowsHorizontal size="32" class="text-white hidden lg:block" />
             <PhArrowsDownUp size="32" class="text-white block lg:hidden" />
+            <Button
+              size="small"
+              label="Converter"
+              class="mt-4 min-w-[130px] w-min mb-1 hidden! lg:block!"
+              @click="goToSignin"
+            />
           </div>
         </div>
 
         <div class="bg-[#111111] p-6 rounded-lg flex-1">
-          <div
-            class="flex gap-4 border-b border-gray-400 pb-8 mb-4 justify-between"
-          >
-            <InputNumber
-              placeholder="Price"
-              class="flex-1 lg:w-1/2"
-              :pt="{
-                root: { class: 'min-w-[140px]!' },
-                pcinputtext: { root: { class: 'min-w-[140px]!' } },
-              }"
-            />
-            <MovementCrypto crypto="usdt" />
-          </div>
-
-          <div class="flex flex-col">
-            <p>Disponível</p>
-            <div class="flex justify-between">
-              <span class="text-white">BRL 0,00</span>
-              <div class="cursor-pointer text-[#E94F06]">MAX</div>
+          <div class="flex gap-4 pb-8 mb-4 justify-between">
+            <div class="lg:w-1/2">
+              <InputNumber
+                placeholder="Price"
+                class="flex-1 lg:flex-initial lg:w-full"
+                :pt="{
+                  root: { class: 'min-w-[100px]!' },
+                  pcinputtext: { root: { class: 'min-w-[100px]!' } },
+                }"
+              />
             </div>
+            <MovementCrypto crypto="usdt" />
           </div>
         </div>
       </div>
 
-      <p class="mt-1 text-xs">Valor mínimo: R$25,00</p>
+      <div class="flex flex-col w-full bg-[#111111] p-6 rounded-lg mt-4">
+        <div class="flex flex-col gap-1">
+          <div class="flex justify-between">
+            <span>Valor a receber</span>
+            <span>$ 0,00</span>
+          </div>
 
+          <div class="flex justify-between">
+            <span>Cotação USDT compra</span>
+            <span>R$ 50,00</span>
+          </div>
+        </div>
+      </div>
+      <small
+        >*Valores da cotação de USDT são atualizados a cada 12 segundos e podem
+        apresentar variações de preço de acordo com o valor de mercado.</small
+      >
+    </div>
+
+    <div class="block lg:hidden w-full">
       <Button
+        fluid
         size="small"
         label="Converter"
-        class="mt-4 min-w-[130px]"
+        class="mt-4 min-w-[130px] w-min mb-1"
         @click="goToSignin"
       />
     </div>
 
     <div>
-      <div class="mt-8 w-full bg-[#111111] p-2 rounded-lg">
+      <div class="mt-4 w-full bg-[#111111] p-2 rounded-lg">
         <DataTable :value="products" tableStyle="min-width: 50rem" scrollable>
           <template #header>
             <div class="flex flex-wrap items-center justify-between gap-2">

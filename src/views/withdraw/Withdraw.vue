@@ -52,7 +52,7 @@ const products = [
     rating: 4,
     type: "withdraw",
     date: "2018-04-04T16:00:00.000Z",
-    crypto: "brl",
+    crypto: "usdt",
   },
   {
     id: "1001",
@@ -107,18 +107,18 @@ await getProfile();
           </div>
         </div>
         <div class="flex flex-col mt-4">
-          <MovementCrypto crypto="brl" />
+          <MovementCrypto crypto="usdt" />
 
           <div class="mt-4">
             <h3 class="font-bold text-white">Método de recebimento</h3>
             <div class="flex items-center gap-4 mt-2">
               <img
-                src="https://app.tcr.finance/img/depositar/pix.svg"
+                src="https://app.tcr.finance/img/coins/tron.svg"
                 class="w-8 h-8"
               />
               <div>
-                <p class="font-bold text-white">PIX</p>
-                <small class="text-gray-400">Transferência instantânea</small>
+                <p class="font-bold text-white">Tron</p>
+                <small class="text-gray-400">TRC-20</small>
               </div>
             </div>
           </div>
@@ -131,31 +131,53 @@ await getProfile();
             <label class="mb-1 text-white">Valor a sacar</label>
             <InputGroup>
               <InputNumber placeholder="Price" />
-              <InputGroupAddon>BRL</InputGroupAddon>
+              <InputGroupAddon>USDT</InputGroupAddon>
             </InputGroup>
             <div class="flex justify-between mt-1">
-              <small>Sado disponível: 0,00 BRL <span>MAX</span></small>
-              <small>Valor mínimo: R$ 100,00</small>
+              <small>Sado disponível: 0,00 USDT <span>MAX</span></small>
+              <small>Valor mínimo: $ 100,00</small>
             </div>
           </div>
 
           <div class="flex flex-col mt-6">
-            <label class="mb-1 text-white">Chave PIX</label>
+            <label class="mb-1 text-white">Wallet</label>
             <InputText
               type="text"
-              placeholder="Digite sua chave PIX (CPF, email, telefone ou chave aleatória)"
+              placeholder="Endereço da sua wallet"
               v-model="value"
             />
-            <div class="flex justify-between mt-1">
-              <small>Insira a chave do PIX onde deseja receber o valor</small>
-            </div>
           </div>
 
-          <Button size="small" class="w-full mt-6">
-            <div class="flex items-center gap-4">
-              <span class="font-semibold">Prosseguir</span>
+          <div>
+            <div class="flex flex-col">
+              <div class="pt-6 pb-4">
+                <hr />
+              </div>
+              <div class="flex flex-col gap-2">
+                <div class="flex justify-between">
+                  <span>Taxa da rede</span>
+                  <span>$ 2.50</span>
+                </div>
+                <div class="flex justify-between">
+                  <span>Valor líquido</span>
+                  <span>$ 2.50</span>
+                </div>
+              </div>
             </div>
-          </Button>
+
+            <Button size="small" class="w-full mt-6">
+              <div class="flex items-center gap-4">
+                <span class="font-semibold">Realizar saque</span>
+              </div>
+            </Button>
+
+            <div class="w-8/12 mt-2">
+              <p class="text-xs">
+                Saque por cripto podem levar alguns minutos e a taxa de
+                processamento da rede podem chegar aproximadamente 3 USDT.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>

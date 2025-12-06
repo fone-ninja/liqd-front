@@ -8,6 +8,7 @@ import {
   PhCoins,
   PhHandDeposit,
   PhHandWithdraw,
+  PhWhatsappLogo,
 } from "@phosphor-icons/vue";
 
 import logo from "../../../public/logo.png";
@@ -27,7 +28,7 @@ const goTo = (routeName: string) => {
 const signout = async () => {
   try {
     // await authService.signout();
-    router.push({ name: "signin" });
+    router.replace({ name: "signin" });
   } catch (error) {
     console.log(error);
   }
@@ -94,7 +95,11 @@ const signout = async () => {
     </div>
 
     <div class="cta-section">
-      <ul>
+      <ul class="w-full">
+        <li class="flex items-center gap-2">
+          <PhWhatsappLogo :size="16" weight="fill" class="item-icon" />
+          <span class="item-text">Central de ajuda</span>
+        </li>
         <li class="flex items-center gap-2" @click="signout">
           <PhSignOut :size="16" weight="fill" class="item-icon" />
           <span class="item-text">Sair da conta</span>
@@ -122,6 +127,7 @@ ul {
 
 li {
   padding: 8px 12px;
+  margin: 2px 0;
 }
 
 .cta-section {
