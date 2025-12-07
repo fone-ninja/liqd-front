@@ -1,22 +1,24 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import logo from '../../../public/logo.png'
+import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
+import logo from "../../../public/logo.png";
 
-defineOptions({ name: 'AuthSuccess' })
+defineOptions({ name: "AuthSuccess" });
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 
-const countdown = ref(3)
-const router = useRouter()
+const countdown = ref(3);
+const router = useRouter();
 
 onMounted(async () => {
   const interval = setInterval(() => {
-    countdown.value--
+    countdown.value--;
     if (countdown.value === 0) {
-      clearInterval(interval)
-      router.push({ name: 'home' }) // ajuste o nome da rota se necessário
+      clearInterval(interval);
+      router.push({ name: "home" });
     }
-  }, 1000)
-})
+  }, 1000);
+});
 </script>
 
 <template>
@@ -27,8 +29,8 @@ onMounted(async () => {
       alt="Sucesso"
       class="success-illustration"
     />
-    <h1>Autenticação realizada com sucesso!</h1>
-    <p>Você será redirecionado para a página inicial em {{ countdown }} segundos.</p>
+    <h1>{{ t("auth.success.title") }}</h1>
+    <p>{{ t("auth.success.redirect_message", { seconds: countdown }) }}</p>
   </div>
 </template>
 

@@ -93,5 +93,47 @@
     "sent": "Enviado",
     "canceled": "Cancelado",
     "error": "Error"
+  },
+  "auth": {
+    "signin": {
+      "title": "Bienvenido a LIQD",
+      "remember": "Recuérdame",
+      "forgot_password": "Olvidó su contraseña",
+      "signin_button": "Iniciar sesión",
+      "no_account": "¿No tienes una cuenta?",
+      "signup_button": "Regístrate"
+    },
+    "signup": {
+      "title": "Crear cuenta",
+      "name_label": "Nombre",
+      "confirm_password_label": "Confirmar contraseña",
+      "create_button": "Crear",
+      "have_account": "¿Ya tienes una cuenta?",
+      "signin_button": "Iniciar sesión"
+    },
+    "forgot": {
+      "title": "Olvidó su contraseña",
+      "recovery_button": "Recuperar"
+    },
+    "codesent": {
+      "title": "Código de recuperación enviado",
+      "message_part1": "Enviamos un enlace de recuperación de contraseña a su correo electrónico:",
+      "message_part2": "Si no lo encuentra en su bandeja de entrada o spam en 2 minutos, contáctenos por WhatsApp abajo.",
+      "whatsapp_button": "Soporte WhatsApp",
+      "back_to_signin_button": "Volver a iniciar sesión"
+    },
+    "reset": {
+      "title": "Restablecer contraseña",
+      "confirm_password_label": "Confirmar contraseña",
+      "reset_button": "Restablecer contraseña"
+    },
+    "success": {
+      "title": "¡Autenticación exitosa!",
+      "redirect_message": "Será redirigido a la página de inicio en {seconds} segundos."
+    },
+    "shared": {
+      "email": "Email",
+      "password": "Contraseña"
+    }
   }
 }
