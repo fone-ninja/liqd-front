@@ -25,6 +25,9 @@ import { useQRCode } from "@vueuse/integrations/useQRCode";
 const showMovementModal = ref(false);
 const movement = ref(null);
 
+const hiddenFrom = ref(false);
+const hiddenTo = ref(false);
+
 const qrcode = useQRCode("text-to-encode");
 
 const pixQrCode = ref(
@@ -121,12 +124,20 @@ await getProfile();
             </div>
 
             <div class="flex gap-4">
-              <PhEyeSlash :size="16" weight="fill" class="text-white" />
+              <component
+                :is="hiddenFrom ? PhEyeSlash : PhEye"
+                :size="16"
+                weight="fill"
+                class="text-white cursor-pointer"
+                @click="hiddenFrom = !hiddenFrom"
+              />
               <PhArrowsClockwise :size="16" weight="fill" class="text-white" />
             </div>
           </div>
           <div class="flex mt-4">
-            <span class="text-2xl text-white">R$ 5,00</span>
+            <span class="text-2xl text-white">{{
+              hiddenFrom ? "••••••" : "R$ 5,00"
+            }}</span>
           </div>
         </div>
 
@@ -142,12 +153,20 @@ await getProfile();
             </div>
 
             <div class="flex gap-4">
-              <PhEyeSlash :size="16" weight="fill" class="text-white" />
+              <component
+                :is="hiddenTo ? PhEyeSlash : PhEye"
+                :size="16"
+                weight="fill"
+                class="text-white cursor-pointer"
+                @click="hiddenTo = !hiddenTo"
+              />
               <PhArrowsClockwise :size="16" weight="fill" class="text-white" />
             </div>
           </div>
           <div class="flex mt-4">
-            <span class="text-2xl text-white">R$ 5,00</span>
+            <span class="text-2xl text-white">{{
+              hiddenTo ? "••••••" : "R$ 5,00"
+            }}</span>
           </div>
         </div>
       </div>

@@ -64,6 +64,9 @@ const products = [
 const showMovementModal = ref(false);
 const movement = ref(null);
 
+const hiddenBRL = ref(false);
+const hiddenUSD = ref(false);
+
 const spinnerProgress = ref(0);
 const valueRef = ref<HTMLElement | null>(null);
 const barWidth = ref("130px");
@@ -182,12 +185,24 @@ onUnmounted(() => {
             </div>
 
             <div class="flex gap-4">
-              <PhEyeSlash :size="16" weight="fill" class="text-white" />
-              <PhArrowsClockwise :size="16" weight="fill" class="text-white" />
+              <component
+                :is="hiddenBRL ? PhEyeSlash : PhEye"
+                :size="16"
+                weight="fill"
+                class="text-white cursor-pointer"
+                @click="hiddenBRL = !hiddenBRL"
+              />
+              <PhArrowsClockwise
+                :size="16"
+                weight="fill"
+                class="text-white cursor-pointer"
+              />
             </div>
           </div>
           <div class="flex mt-4">
-            <span class="text-2xl text-white">R$ 5,00</span>
+            <span class="text-2xl text-white">{{
+              hiddenBRL ? "••••••" : "R$ 5,00"
+            }}</span>
           </div>
         </div>
 
@@ -203,12 +218,24 @@ onUnmounted(() => {
             </div>
 
             <div class="flex gap-4">
-              <PhEyeSlash :size="16" weight="fill" class="text-white" />
-              <PhArrowsClockwise :size="16" weight="fill" class="text-white" />
+              <component
+                :is="hiddenUSD ? PhEyeSlash : PhEye"
+                :size="16"
+                weight="fill"
+                class="text-white cursor-pointer"
+                @click="hiddenUSD = !hiddenUSD"
+              />
+              <PhArrowsClockwise
+                :size="16"
+                weight="fill"
+                class="text-white cursor-pointer"
+              />
             </div>
           </div>
           <div class="flex mt-4">
-            <span class="text-2xl text-white">R$ 5,00</span>
+            <span class="text-2xl text-white">{{
+              hiddenUSD ? "••••••" : "R$ 5,00"
+            }}</span>
           </div>
         </div>
       </div>

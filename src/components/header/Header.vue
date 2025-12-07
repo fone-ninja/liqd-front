@@ -8,6 +8,7 @@ import {
   PhSignOut,
   PhArrowClockwise,
   PhEye,
+  PhEyeSlash,
 } from "@phosphor-icons/vue";
 
 import * as authService from "@/services/auth/authService";
@@ -118,7 +119,8 @@ const goTo = (routeName: string) => {
             <span class="text-xs text-blue-300"
               >{{ amoountUSDTShown }} USDT</span
             >
-            <PhEye
+            <component
+              :is="hiddenValues ? PhEyeSlash : PhEye"
               :size="16"
               weight="fill"
               color="white"
