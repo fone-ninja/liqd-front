@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useRouter, useRoute } from "vue-router";
+import { useI18n } from "vue-i18n";
 import * as authService from "@/services/auth/authService";
 import {
   PhBook,
@@ -15,11 +16,28 @@ import logo from "../../../public/logo.png";
 const router = useRouter();
 const route = useRoute();
 
+const { t } = useI18n();
+
 const items = [
-  { key: "home", route: "home", icon: PhHouse, label: "Home" },
-  { key: "deposit", route: "deposit", icon: PhHandDeposit, label: "Depositar" },
-  { key: "convert", route: "convert", icon: PhCoins, label: "Converter" },
-  { key: "withdraw", route: "withdraw", icon: PhHandWithdraw, label: "Sacar" },
+  { key: "home", route: "home", icon: PhHouse, label: t("sidebar.home") },
+  {
+    key: "deposit",
+    route: "deposit",
+    icon: PhHandDeposit,
+    label: t("sidebar.deposit"),
+  },
+  {
+    key: "convert",
+    route: "convert",
+    icon: PhCoins,
+    label: t("sidebar.convert"),
+  },
+  {
+    key: "withdraw",
+    route: "withdraw",
+    icon: PhHandWithdraw,
+    label: t("sidebar.withdraw"),
+  },
 ];
 
 const isSelected = (routeName: string) => {

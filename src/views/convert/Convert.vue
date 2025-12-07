@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import { useI18n } from "vue-i18n";
 import useUser from "@/use/useUser/useUser.ts";
 import MovementTag from "@/components/movements/MovementTag.vue";
 import MovementCrypto from "@/components/movements/MovementCrypto.vue";
 import ConvertCrypto from "@/components/convert/ConvertCrypto.vue";
-import MovementModal from "@/components/movements/MovementModal.vue";
+import MovementModal from "@/components/movements/modal/MovementModal.vue";
 import {
   PhBook,
   PhHouse,
@@ -91,6 +92,8 @@ const getFormatTime = (dateStr: string) => {
 
 const { getUser, user } = useUser();
 
+const { t } = useI18n();
+
 const getProfile = async () => {
   try {
     await getUser();
@@ -107,7 +110,9 @@ await getProfile();
     <MovementModal v-model="showMovementModal" :movement />
 
     <h1 class="text-xl mb-2">
-      <b class="text-white pb-2 border-b-2 border-white">Converter</b>
+      <b class="text-white pb-2 border-b-2 border-white">{{
+        t("convert.title")
+      }}</b>
     </h1>
 
     <div class="mt-12 w-full">
@@ -120,7 +125,9 @@ await getProfile();
                 alt="br"
                 class="w-6 h-6"
               />
-              <h3 class="text-lg font-bold text-white">Saldo BRL</h3>
+              <h3 class="text-lg font-bold text-white">
+                {{ t("convert.balance_brl") }}
+              </h3>
             </div>
 
             <div class="flex gap-4">
@@ -149,7 +156,9 @@ await getProfile();
                 alt="us"
                 class="w-6 h-6"
               />
-              <h3 class="text-lg font-bold text-white">Saldo USD</h3>
+              <h3 class="text-lg font-bold text-white">
+                {{ t("convert.balance_usd") }}
+              </h3>
             </div>
 
             <div class="flex gap-4">
@@ -185,17 +194,21 @@ await getProfile();
                   pcinputtext: { root: { class: 'min-w-[100px]!' } },
                 }"
               />
-              <p class="mt-1 text-xs">Valor mínimo: R$25,00</p>
+              <p class="mt-1 text-xs">
+                {{ t("convert.min_value", { value: "R$25,00" }) }}
+              </p>
             </div>
 
             <MovementCrypto crypto="brl" />
           </div>
 
           <div class="flex flex-col">
-            <p>Disponível</p>
+            <p>{{ t("convert.available") }}</p>
             <div class="flex justify-between">
               <span class="text-white">BRL 0,00</span>
-              <div class="cursor-pointer text-[#E94F06]">MAX</div>
+              <div class="cursor-pointer text-[#E94F06]">
+                {{ t("common.max") }}
+              </div>
             </div>
           </div>
         </div>
@@ -206,7 +219,7 @@ await getProfile();
             <PhArrowsDownUp size="32" class="text-white block lg:hidden" />
             <Button
               size="small"
-              label="Converter"
+              :label="t('common.converter_button')"
               class="mt-4 min-w-[130px] w-min mb-1 hidden! lg:block!"
               @click="goToSignin"
             />
@@ -233,27 +246,24 @@ await getProfile();
       <div class="flex flex-col w-full bg-[#111111] p-6 rounded-lg mt-4">
         <div class="flex flex-col gap-1">
           <div class="flex justify-between">
-            <span>Valor a receber</span>
+            <span>{{ t("convert.value_to_receive") }}</span>
             <span>$ 0,00</span>
           </div>
 
           <div class="flex justify-between">
-            <span>Cotação USDT compra</span>
+            <span>{{ t("convert.usdt_buy_quote") }}</span>
             <span>R$ 50,00</span>
           </div>
         </div>
       </div>
-      <small
-        >*Valores da cotação de USDT são atualizados a cada 12 segundos e podem
-        apresentar variações de preço de acordo com o valor de mercado.</small
-      >
+      <small>{{ t("convert.quote_notice") }}</small>
     </div>
 
     <div class="block lg:hidden w-full">
       <Button
         fluid
         size="small"
-        label="Converter"
+        :label="t('common.converter_button')"
         class="mt-4 min-w-[130px] w-min mb-1"
         @click="goToSignin"
       />
@@ -264,10 +274,12 @@ await getProfile();
         <DataTable :value="products" tableStyle="min-width: 50rem" scrollable>
           <template #header>
             <div class="flex flex-wrap items-center justify-between gap-2">
-              <span class="text-xl font-bold">Últimas movimentações</span>
+              <span class="text-xl font-bold">{{
+                t("convert.last_movements")
+              }}</span>
             </div>
           </template>
-          <Column field="name" header="Data">
+          <Column field="name" :header="t('table.date')">
             <template #body="slotProps">
               <p>{{ getFormatDate(slotProps.data.date) }}</p>
               <small class="text-gray-400">{{
@@ -275,12 +287,12 @@ await getProfile();
               }}</small>
             </template>
           </Column>
-          <Column header="Tipo Mov.">
+          <Column :header="t('table.type')">
             <template #body="slotProps">
               <MovementTag :type="slotProps.data.type" />
             </template>
           </Column>
-          <Column field="price" header="Moeda">
+          <Column field="price" :header="t('table.currency')">
             <template #body="slotProps">
               <ConvertCrypto
                 :cryptoFrom="slotProps.data.cryptoFrom"
@@ -288,7 +300,7 @@ await getProfile();
               />
             </template>
           </Column>
-          <Column field="category" header="Valor">
+          <Column field="category" :header="t('table.value')">
             <template #body="slotProps">
               <span v-if="slotProps.price < 0" class="text-red-400">-</span>
               <span v-else class="text-green-400">+</span>
@@ -299,7 +311,7 @@ await getProfile();
 
           <Column
             field="balance"
-            header="Ações"
+            :header="t('table.actions')"
             alignFrozen="right"
             frozen
             class="w-[80px]"
@@ -320,10 +332,11 @@ await getProfile();
           </Column>
 
           <template #footer>
-            <small class="text-gray-400"
-              >{{ products ? products.length : 0 }} movimentações
-              existentes.</small
-            >
+            <small class="text-gray-400">{{
+              t("common.movements_count", {
+                count: products ? products.length : 0,
+              })
+            }}</small>
           </template>
         </DataTable>
       </div>

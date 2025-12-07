@@ -1,0 +1,97 @@
+{
+  "home": {
+    "title": "Inicio",
+    "balance_brl": "Saldo BRL",
+    "balance_usd": "Saldo USD",
+    "liqd_quote": "Cotización LIQD",
+    "last_movements": "Últimos movimientos",
+    "quote_updated_every": "El valor de la cotización se actualiza cada {seconds} segundos.",
+    "buy": "Compra",
+    "sell": "Venta"
+  },
+  "table": {
+    "date": "Fecha",
+    "type": "Tipo",
+    "currency": "Moneda",
+    "value": "Valor",
+    "actions": "Acciones",
+    "destination": "Destino",
+    "status": "Estado"
+  },
+  "deposit": {
+    "title": "Depositar",
+    "subtitle": "Deposite su dinero",
+    "method": "Método de recepción",
+    "pix": "PIX",
+    "pix_instant": "Transferencia instantánea",
+    "proceed": "Continuar",
+    "ready_qr": "Listo para generar código QR",
+    "select_and_proceed": "Seleccione la moneda y método de pago, luego haga clic en \"Continuar\".",
+    "balance": "Saldo",
+    "qr_code": "Código QR",
+    "copy_qr": "Copiar código QR",
+    "history": "Historial de depósitos",
+    "status_confirmed": "Confirmado"
+  },
+  "withdraw": {
+    "title": "Retirar",
+    "subtitle": "Retire su dinero",
+    "method": "Método de recepción",
+    "amount_label": "Cantidad a retirar",
+    "available": "Saldo disponible: {amount} {currency}",
+    "min_value": "Valor mínimo: {value}",
+    "wallet_label": "Wallet",
+    "wallet_placeholder": "Dirección de su wallet",
+    "network_fee": "Tarifa de red",
+    "net_amount": "Importe neto",
+    "withdraw_button": "Retirar",
+    "note": "Los retiros por crypto pueden tardar unos minutos y las tarifas de procesamiento de la red pueden ser aproximadamente {fee}.",
+    "history": "Historial de retiros"
+  },
+  "sidebar": {
+    "section_main": "PRINCIPAL",
+    "section_transactions": "TRANSACCIONES",
+    "home": "Inicio",
+    "deposit": "Depositar",
+    "convert": "Convertir",
+    "withdraw": "Retirar",
+    "help_center": "Centro de ayuda",
+    "sign_out": "Cerrar sesión"
+  },
+  "header": {
+    "my_profile": "Mi perfil",
+    "logout": "Cerrar sesión",
+    "language": "Idioma"
+  },
+  "convert": {
+    "title": "Convertir",
+    "balance_brl": "Saldo BRL",
+    "balance_usd": "Saldo USD",
+    "available": "Disponible",
+    "min_value": "Valor mínimo: {value}",
+    "value_to_receive": "Importe a recibir",
+    "usdt_buy_quote": "Cotización USDT compra",
+    "quote_notice": "*Los valores de la cotización de USDT se actualizan cada 12 segundos y pueden variar según los precios del mercado."
+  },
+  "common": {
+    "converter_button": "Convertir",
+    "max": "MAX",
+    "movements_count": "{count} movimientos encontrados."
+  },
+  "languages": {
+    "english": "Inglés",
+    "portuguese": "Portugués",
+    "spanish": "Español"
+  },
+  "tags": {
+    "deposit": "Depositar",
+    "withdraw": "Retirar",
+    "convert": "Conversión"
+  },
+  "moviment_status": {
+    "confirmed": "Confirmado",
+    "sent": "Enviado",
+    "canceled": "Cancelado",
+    "error": "Error"
+  }
+}

@@ -9,11 +9,13 @@ import {
   PhArrowClockwise,
   PhEye,
   PhEyeSlash,
+  PhFlag,
 } from "@phosphor-icons/vue";
 
 import * as authService from "@/services/auth/authService";
 
-import { markRaw, ref, computed } from "vue";
+import { markRaw, ref, computed, onMounted } from "vue";
+import { useI18n } from "vue-i18n";
 
 const router = useRouter();
 const hiddenValues = ref(false);
@@ -47,13 +49,56 @@ const signout = async () => {
 };
 
 const menu = ref();
+const { t, locale } = useI18n();
 const items = ref([
   {
-    label: "My profile",
+    id: "profile",
+    label: t("header.my_profile"),
     icon: markRaw(PhUser),
   },
   {
-    label: "Logout",
+    id: "language",
+    label: t("header.language"),
+    icon: markRaw(PhFlag),
+    items: [
+      {
+        id: "en",
+        parentId: "language",
+        label: t("languages.english"),
+        img: "https://app.tcr.finance/img/language_flags/EN.svg",
+        command: () => {
+          locale.value = "en";
+          if (typeof window !== "undefined")
+            localStorage.setItem("locale", "en");
+        },
+      },
+      {
+        id: "pt",
+        parentId: "language",
+        label: t("languages.portuguese"),
+        img: "https://app.tcr.finance/img/language_flags/pt-BR.svg",
+        command: () => {
+          locale.value = "pt";
+          if (typeof window !== "undefined")
+            localStorage.setItem("locale", "pt");
+        },
+      },
+      {
+        id: "es",
+        parentId: "language",
+        label: t("languages.spanish"),
+        img: "https://app.tcr.finance/img/language_flags/ES.svg",
+        command: () => {
+          locale.value = "es";
+          if (typeof window !== "undefined")
+            localStorage.setItem("locale", "es");
+        },
+      },
+    ],
+  },
+  {
+    id: "logout",
+    label: t("header.logout"),
     icon: markRaw(PhSignOut),
     command: () => {
       signout();
@@ -63,6 +108,28 @@ const items = ref([
     separator: true,
   },
 ]);
+
+const handleLanguageSelection = (item) => {
+  if (typeof window !== "undefined") {
+    const saved = localStorage.getItem("locale");
+    return saved && item.id === saved;
+  }
+
+  return false;
+};
+
+const getItemSelected = (item) => {
+  if (item.parentId === "language") return handleLanguageSelection(item);
+
+  return false;
+};
+
+onMounted(() => {
+  if (typeof window !== "undefined") {
+    const saved = localStorage.getItem("locale");
+    if (saved) locale.value = saved;
+  }
+});
 
 const toggle = (event) => {
   menu.value.toggle(event);
@@ -136,12 +203,19 @@ const goTo = (routeName: string) => {
       >
         ER
       </div>
-      <Menu ref="menu" id="overlay_menu" :model="items" :popup="true">
-        <template #item="{ item, props }">
-          <a v-ripple class="flex items-center" v-bind="props.action">
-            <component :is="item.icon" class="mr-1" />
-            <span class="text-sm">{{ item.label }}</span>
-            <Badge v-if="!!item.badge" size="small">{{ item.badge }}</Badge>
+      <TieredMenu ref="menu" id="overlay_menu" :model="items" :popup="true">
+        <template #item="{ item, props, hasSubmenu }">
+          <a
+            v-ripple
+            class="flex items-center"
+            v-bind="props.action"
+            :class="{ 'menu-item-selected': getItemSelected(item) }"
+          >
+            <component v-if="item.icon" :is="item.icon" />
+            <img v-else :src="item.img" class="h-4 w-4 rounded" />
+            <span class="ml-1">{{ item.label }}</span>
+
+            <i v-if="hasSubmenu" class="pi pi-angle-right ml-auto"></i>
           </a>
         </template>
         <template #end>
@@ -154,7 +228,7 @@ const goTo = (routeName: string) => {
             <small class="font-bold">eduardo@gmail.com</small>
           </div>
         </template>
-      </Menu>
+      </TieredMenu>
     </div>
   </header>
 </template>
@@ -173,5 +247,9 @@ header {
   left: 0;
   right: 0;
   z-index: 100;
+}
+
+.menu-item-selected {
+  background-color: #27272a;
 }
 </style>

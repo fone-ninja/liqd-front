@@ -1,0 +1,97 @@
+{
+  "home": {
+    "title": "Home",
+    "balance_brl": "Saldo BRL",
+    "balance_usd": "Saldo USD",
+    "liqd_quote": "Cotação LIQD",
+    "last_movements": "Últimas movimentações",
+    "quote_updated_every": "O valor da cotação é atualizado a cada {seconds} segundos.",
+    "buy": "Compra",
+    "sell": "Venda"
+  },
+  "table": {
+    "date": "Data",
+    "type": "Tipo",
+    "currency": "Moeda",
+    "value": "Valor",
+    "actions": "Ações",
+    "destination": "Destino"
+  },
+  "convert": {
+    "title": "Converter",
+    "balance_brl": "Saldo BRL",
+    "balance_usd": "Saldo USD",
+    "available": "Disponível",
+    "min_value": "Valor mínimo: {value}",
+    "value_to_receive": "Valor a receber",
+    "usdt_buy_quote": "Cotação USDT compra",
+    "quote_notice": "*Valores da cotação de USDT são atualizados a cada 12 segundos e podem apresentar variações de preço de acordo com o valor de mercado."
+  },
+  "deposit": {
+    "title": "Depositar",
+    "subtitle": "Deposite seu dinheiro",
+    "method": "Método de recebimento",
+    "pix": "PIX",
+    "pix_instant": "Transferência instantânea",
+    "proceed": "Prosseguir",
+    "ready_qr": "Pronto para gerar QR Code",
+    "select_and_proceed": "Selecione a moeda e método de pagamento, depois clique em \"Prosseguir\".",
+    "balance": "Saldo",
+    "qr_code": "Código QR",
+    "copy_qr": "Copiar código QR",
+    "history": "Histórico de depósitos",
+    "status_confirmed": "Confirmado"
+  },
+  "withdraw": {
+    "title": "Sacar",
+    "subtitle": "Saque seu dinheiro",
+    "method": "Método de recebimento",
+    "amount_label": "Valor a sacar",
+    "available": "Saldo disponível: {amount} {currency}",
+    "min_value": "Valor mínimo: {value}",
+    "wallet_label": "Wallet",
+    "wallet_placeholder": "Endereço da sua wallet",
+    "network_fee": "Taxa da rede",
+    "net_amount": "Valor líquido",
+    "withdraw_button": "Realizar saque",
+    "note": "Saques por cripto podem levar alguns minutos e a taxa de processamento da rede pode chegar aproximadamente {fee}.",
+    "history": "Histórico de saques"
+  },
+  "sidebar": {
+    "section_main": "PRINCIPAL",
+    "section_transactions": "TRANSAÇÕES",
+    "home": "Home",
+    "deposit": "Depositar",
+    "convert": "Converter",
+    "withdraw": "Sacar",
+    "help_center": "Central de ajuda",
+    "sign_out": "Sair da conta"
+  },
+  "header": {
+    "my_profile": "Meu perfil",
+    "logout": "Sair",
+    "language": "Idioma"
+  },
+  "common": {
+    "converter_button": "Converter",
+    "max": "MAX",
+    "movements_count": "{count} movimentações encontradas.",
+    "proceed": "Prosseguir"
+  },
+  "languages": {
+    "english": "Inglês",
+    "portuguese": "Português",
+    "spanish": "Espanhol"
+  },
+  "tags": {
+    "deposit": "Depósito",
+    "withdraw": "Saque",
+    "convert": "Conversão"
+  },
+  "moviment_status": {
+    "confirmed": "Confirmado",
+    "sent": "Enviado",
+    "canceled": "Cancelado",
+    "error": "Erro"
+  }
+}

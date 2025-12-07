@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import { useI18n } from "vue-i18n";
 import useUser from "@/use/useUser/useUser.ts";
 import MovementTag from "@/components/movements/MovementTag.vue";
 import MovementCrypto from "@/components/movements/MovementCrypto.vue";
-import MovementModal from "@/components/movements/MovementModal.vue";
+import MovementModal from "@/components/movements/modal/MovementModal.vue";
 import {
   PhFile,
   PhHouse,
@@ -79,6 +80,7 @@ const getFormatTime = (dateStr: string) => {
 };
 
 const { getUser, user } = useUser();
+const { t } = useI18n();
 
 const getProfile = async () => {
   try {
@@ -96,14 +98,18 @@ await getProfile();
     <MovementModal v-model="showMovementModal" :movement />
 
     <h1 class="text-xl mb-2">
-      <b class="text-white pb-2 border-b-2 border-white">Sacar</b>
+      <b class="text-white pb-2 border-b-2 border-white">{{
+        t("withdraw.title")
+      }}</b>
     </h1>
 
     <div class="flex flex-col lg:flex-row gap-4 mt-12 w-full">
       <div class="flex-shrink-0 w-full lg:w-4/12 bg-[#111111] p-6 rounded-lg">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2">
-            <h3 class="text-lg font-bold text-white">Deposite seu dinheiro</h3>
+            <h3 class="text-lg font-bold text-white">
+              {{ t("withdraw.subtitle") }}
+            </h3>
           </div>
         </div>
         <div class="flex flex-col mt-4">
@@ -128,14 +134,23 @@ await getProfile();
       <div class="flex flex-1">
         <div class="bg-[#111111] p-6 rounded-lg w-full gap-4">
           <div class="flex flex-col">
-            <label class="mb-1 text-white">Valor a sacar</label>
+            <label class="mb-1 text-white">{{
+              t("withdraw.amount_label")
+            }}</label>
             <InputGroup>
-              <InputNumber placeholder="Price" />
+              <InputNumber :placeholder="t('withdraw.amount_placeholder')" />
               <InputGroupAddon>USDT</InputGroupAddon>
             </InputGroup>
             <div class="flex justify-between mt-1">
-              <small>Sado disponível: 0,00 USDT <span>MAX</span></small>
-              <small>Valor mínimo: $ 100,00</small>
+              <small
+                >{{
+                  t("withdraw.available", { amount: "0,00", currency: "USDT" })
+                }}
+                <span>{{ t("common.max") }}</span></small
+              >
+              <small>{{
+                t("withdraw.min_value", { value: "$ 100,00" })
+              }}</small>
             </div>
           </div>
 
@@ -143,7 +158,7 @@ await getProfile();
             <label class="mb-1 text-white">Wallet</label>
             <InputText
               type="text"
-              placeholder="Endereço da sua wallet"
+              :placeholder="t('withdraw.wallet_placeholder')"
               v-model="value"
             />
           </div>
@@ -155,11 +170,11 @@ await getProfile();
               </div>
               <div class="flex flex-col gap-2">
                 <div class="flex justify-between">
-                  <span>Taxa da rede</span>
+                  <span>{{ t("withdraw.network_fee") }}</span>
                   <span>$ 2.50</span>
                 </div>
                 <div class="flex justify-between">
-                  <span>Valor líquido</span>
+                  <span>{{ t("withdraw.net_amount") }}</span>
                   <span>$ 2.50</span>
                 </div>
               </div>
@@ -173,8 +188,7 @@ await getProfile();
 
             <div class="w-8/12 mt-2">
               <p class="text-xs">
-                Saque por cripto podem levar alguns minutos e a taxa de
-                processamento da rede podem chegar aproximadamente 3 USDT.
+                {{ t("withdraw.note", { fee: "3 USDT" }) }}
               </p>
             </div>
           </div>
@@ -187,10 +201,10 @@ await getProfile();
         <DataTable :value="products" tableStyle="min-width: 50rem" scrollable>
           <template #header>
             <div class="flex flex-wrap items-center justify-between gap-2">
-              <span class="text-xl font-bold">Histórico de depósitos</span>
+              <span class="text-xl font-bold">{{ t("withdraw.history") }}</span>
             </div>
           </template>
-          <Column field="name" header="Data">
+          <Column field="name" :header="t('table.date')">
             <template #body="slotProps">
               <p>{{ getFormatDate(slotProps.data.date) }}</p>
               <small class="text-gray-400">{{
@@ -198,13 +212,14 @@ await getProfile();
               }}</small>
             </template>
           </Column>
-          <Column field="price" header="Moeda">
+
+          <Column field="price" :header="t('table.currency')">
             <template #body="slotProps">
               <MovementCrypto :crypto="slotProps.data.crypto" />
             </template>
           </Column>
 
-          <Column field="category" header="Valor">
+          <Column field="category" :header="t('table.value')">
             <template #body="slotProps">
               <span v-if="slotProps.price < 0" class="text-red-400">-</span>
               <span v-else class="text-green-400">+</span>
@@ -213,25 +228,21 @@ await getProfile();
             </template>
           </Column>
 
-          <Column field="category" header="Destino">
+          <Column field="category" :header="t('table.destination')">
             <template #body="slotProps">
               <span>TDkjzwhcRmPrvSuFe3rqyH5vpLt7TSQSfN</span>
             </template>
           </Column>
 
-          <Column header="Status">
+          <Column :header="t('table.status')">
             <template #body="slotProps">
-              <Tag severity="success" class="min-w-[140px]">
-                <div class="flex items-center gap-2 px-1">
-                  <span class="text-sm">Confirmado</span>
-                </div>
-              </Tag>
+              <MovementStatus type="sent" />
             </template>
           </Column>
 
           <Column
             field="balance"
-            header="Ações"
+            :header="t('table.actions')"
             alignFrozen="right"
             frozen
             class="w-[80px]"
@@ -252,10 +263,11 @@ await getProfile();
           </Column>
 
           <template #footer>
-            <small class="text-gray-400"
-              >{{ products ? products.length : 0 }} movimentações
-              existentes.</small
-            >
+            <small class="text-gray-400">{{
+              t("common.movements_count", {
+                count: products ? products.length : 0,
+              })
+            }}</small>
           </template>
         </DataTable>
       </div>

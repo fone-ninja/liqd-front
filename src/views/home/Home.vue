@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, nextTick } from "vue";
+import { useI18n } from "vue-i18n";
 import useUser from "@/use/useUser/useUser.ts";
 import MovementTag from "@/components/movements/MovementTag.vue";
 import MovementCrypto from "@/components/movements/MovementCrypto.vue";
-import MovementModal from "@/components/movements/MovementModal.vue";
+import MovementModal from "@/components/movements/modal/MovementModal.vue";
 import {
   PhBook,
   PhHouse,
@@ -141,6 +142,8 @@ const getFormatTime = (dateStr: string) => {
 
 const { getUser, user } = useUser();
 
+const { t } = useI18n();
+
 const getProfile = async () => {
   try {
     await getUser();
@@ -168,7 +171,9 @@ onUnmounted(() => {
     <MovementModal v-model="showMovementModal" :movement />
 
     <h1 class="text-xl mb-2">
-      <b class="text-white pb-2 border-b-2 border-white">Home</b>
+      <b class="text-white pb-2 border-b-2 border-white">{{
+        t("home.title")
+      }}</b>
     </h1>
 
     <div class="flex flex-col lg:flex-row gap-4 mt-12">
@@ -181,7 +186,9 @@ onUnmounted(() => {
                 alt="br"
                 class="w-6 h-6"
               />
-              <h3 class="text-lg font-bold text-white">Saldo BRL</h3>
+              <h3 class="text-lg font-bold text-white">
+                {{ t("home.balance_brl") }}
+              </h3>
             </div>
 
             <div class="flex gap-4">
@@ -214,7 +221,9 @@ onUnmounted(() => {
                 alt="us"
                 class="w-6 h-6"
               />
-              <h3 class="text-lg font-bold text-white">Saldo USD</h3>
+              <h3 class="text-lg font-bold text-white">
+                {{ t("home.balance_usd") }}
+              </h3>
             </div>
 
             <div class="flex gap-4">
@@ -243,7 +252,9 @@ onUnmounted(() => {
       <div class="flex-1 bg-[#111111] p-6 rounded-lg">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2">
-            <h3 class="text-lg font-bold text-white">Cotação LIQD</h3>
+            <h3 class="text-lg font-bold text-white">
+              {{ t("home.liqd_quote") }}
+            </h3>
           </div>
         </div>
         <div class="flex gap-12">
@@ -254,7 +265,7 @@ onUnmounted(() => {
                 weight="fill"
                 class="text-green-500 inline-block mr-1"
               />
-              <span class="text-green-500 text-sm">Compra</span>
+              <span class="text-green-500 text-sm">{{ t("home.buy") }}</span>
             </div>
 
             <div class="flex flex-col gap-2">
@@ -273,10 +284,9 @@ onUnmounted(() => {
                 </div>
               </div>
             </div>
-            <small class="lg:w-full"
-              >O valor da cotação estará sendo atualizado a cada 12
-              segundos.</small
-            >
+            <small class="lg:w-full">{{
+              t("home.quote_updated_every", { seconds: 12 })
+            }}</small>
           </div>
 
           <!-- DISPONIBILIZAR QUANDO O BACK TIVER SUPORTE -->
@@ -302,10 +312,12 @@ onUnmounted(() => {
         <DataTable :value="products" tableStyle="min-width: 50rem" scrollable>
           <template #header>
             <div class="flex flex-wrap items-center justify-between gap-2">
-              <span class="text-xl font-bold">Últimas movimentações</span>
+              <span class="text-xl font-bold">{{
+                t("home.last_movements")
+              }}</span>
             </div>
           </template>
-          <Column field="name" header="Data">
+          <Column field="name" :header="t('table.date')">
             <template #body="slotProps">
               <p>{{ getFormatDate(slotProps.data.date) }}</p>
               <small class="text-gray-400">{{
@@ -313,17 +325,17 @@ onUnmounted(() => {
               }}</small>
             </template>
           </Column>
-          <Column header="Tipo Mov.">
+          <Column :header="t('table.type')">
             <template #body="slotProps">
               <MovementTag :type="slotProps.data.type" />
             </template>
           </Column>
-          <Column field="price" header="Moeda">
+          <Column field="price" :header="t('table.currency')">
             <template #body="slotProps">
               <MovementCrypto :crypto="slotProps.data.crypto" />
             </template>
           </Column>
-          <Column field="category" header="Valor">
+          <Column field="category" :header="t('table.value')">
             <template #body="slotProps">
               <span v-if="slotProps.price < 0" class="text-red-400">-</span>
               <span v-else class="text-green-400">+</span>
@@ -334,7 +346,7 @@ onUnmounted(() => {
 
           <Column
             field="balance"
-            header="Ações"
+            :header="t('table.actions')"
             alignFrozen="right"
             frozen
             class="w-[80px]"
@@ -355,10 +367,11 @@ onUnmounted(() => {
           </Column>
 
           <template #footer>
-            <small class="text-gray-400"
-              >{{ products ? products.length : 0 }} movimentações
-              existentes.</small
-            >
+            <small class="text-gray-400">{{
+              t("common.movements_count", {
+                count: products ? products.length : 0,
+              })
+            }}</small>
           </template>
         </DataTable>
       </div>

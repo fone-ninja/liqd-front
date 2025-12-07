@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { ref, nextTick, shallowRef } from "vue";
+import { useI18n } from "vue-i18n";
 import useUser from "@/use/useUser/useUser.ts";
 import MovementTag from "@/components/movements/MovementTag.vue";
 import MovementCrypto from "@/components/movements/MovementCrypto.vue";
-import MovementModal from "@/components/movements/MovementModal.vue";
+import MovementStatus from "@/components/movements/MovementStatus.vue";
+import MovementModal from "@/components/movements/modal/MovementModal.vue";
 import {
   PhBook,
   PhHouse,
@@ -93,6 +95,7 @@ const generateQRCode = async () => {
 };
 
 const { getUser, user } = useUser();
+const { t } = useI18n();
 
 const getProfile = async () => {
   try {
@@ -110,14 +113,18 @@ await getProfile();
     <MovementModal v-model="showMovementModal" :movement />
 
     <h1 class="text-xl mb-2">
-      <b class="text-white pb-2 border-b-2 border-white">Depositar</b>
+      <b class="text-white pb-2 border-b-2 border-white">{{
+        t("deposit.title")
+      }}</b>
     </h1>
 
     <div class="flex flex-col lg:flex-row gap-4 mt-12 w-full">
       <div class="flex-shrink-0 w-full lg:w-4/12 bg-[#111111] p-6 rounded-lg">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2">
-            <h3 class="text-lg font-bold text-white">Deposite seu dinheiro</h3>
+            <h3 class="text-lg font-bold text-white">
+              {{ t("deposit.subtitle") }}
+            </h3>
           </div>
         </div>
         <div class="flex flex-col mt-4">
@@ -131,8 +138,10 @@ await getProfile();
                 class="w-8 h-8"
               />
               <div>
-                <p class="font-bold text-white">PIX</p>
-                <small class="text-gray-400">Transferência instantânea</small>
+                <p class="font-bold text-white">{{ t("deposit.pix") }}</p>
+                <small class="text-gray-400">{{
+                  t("deposit.pix_instant")
+                }}</small>
               </div>
             </div>
           </div>
@@ -140,7 +149,7 @@ await getProfile();
           <div class="mt-8">
             <Button size="small" label="Prosseguir" @click="generateQRCode">
               <div class="flex items-center gap-4">
-                <span class="font-semibold">Prosseguir</span>
+                <span class="font-semibold">{{ t("deposit.proceed") }}</span>
                 <PhArrowRight :size="20" weight="fill" />
               </div>
             </Button>
@@ -161,12 +170,11 @@ await getProfile();
             </div>
 
             <h3 class="font-bold text-lg text-white mb-2">
-              Pronto para gerar QR Code
+              {{ t("deposit.ready_qr") }}
             </h3>
 
             <p>
-              Selecione a moeda e método de pagamento, depois clique em
-              "Prosseguir".
+              {{ t("deposit.select_and_proceed") }}
             </p>
           </div>
 
@@ -199,14 +207,18 @@ await getProfile();
                     alt="br"
                   />
                   <div class="flex flex-col">
-                    <span class="text-md font-bold text-white">Saldo</span>
+                    <span class="text-md font-bold text-white">{{
+                      t("deposit.balance")
+                    }}</span>
 
                     <span class="text-sm">R$ 1200,00 BRL</span>
                   </div>
                 </div>
 
                 <div class="mt-6 w-full">
-                  <p class="text-white mb-2 font-bold">Código QR</p>
+                  <p class="text-white mb-2 font-bold">
+                    {{ t("deposit.qr_code") }}
+                  </p>
 
                   <div
                     class="rounded-md p-6 bg-[#181818] h-[140px] my-4 break-all overflow-auto"
@@ -216,7 +228,9 @@ await getProfile();
 
                   <Button size="small" class="w-full">
                     <div class="flex items-center gap-4">
-                      <span class="font-semibold">Copiar código QR</span>
+                      <span class="font-semibold">{{
+                        t("deposit.copy_qr")
+                      }}</span>
                     </div>
                   </Button>
                 </div>
@@ -232,10 +246,10 @@ await getProfile();
         <DataTable :value="products" tableStyle="min-width: 50rem" scrollable>
           <template #header>
             <div class="flex flex-wrap items-center justify-between gap-2">
-              <span class="text-xl font-bold">Histórico de depósitos</span>
+              <span class="text-xl font-bold">{{ t("deposit.history") }}</span>
             </div>
           </template>
-          <Column field="name" header="Data">
+          <Column field="name" :header="t('table.date')">
             <template #body="slotProps">
               <p>{{ getFormatDate(slotProps.data.date) }}</p>
               <small class="text-gray-400">{{
@@ -243,13 +257,13 @@ await getProfile();
               }}</small>
             </template>
           </Column>
-          <Column field="price" header="Moeda">
+          <Column field="price" :header="t('table.currency')">
             <template #body="slotProps">
               <MovementCrypto :crypto="slotProps.data.crypto" />
             </template>
           </Column>
 
-          <Column field="category" header="Valor">
+          <Column field="category" :header="t('table.value')">
             <template #body="slotProps">
               <span v-if="slotProps.price < 0" class="text-red-400">-</span>
               <span v-else class="text-green-400">+</span>
@@ -258,19 +272,15 @@ await getProfile();
             </template>
           </Column>
 
-          <Column header="Status">
+          <Column :header="t('table.status')">
             <template #body="slotProps">
-              <Tag severity="success" class="min-w-[140px]">
-                <div class="flex items-center gap-2 px-1">
-                  <span class="text-sm">Confirmado</span>
-                </div>
-              </Tag>
+              <MovementStatus type="confirmed" />
             </template>
           </Column>
 
           <Column
             field="balance"
-            header="Ações"
+            :header="t('table.actions')"
             alignFrozen="right"
             frozen
             class="w-[80px]"
@@ -291,10 +301,11 @@ await getProfile();
           </Column>
 
           <template #footer>
-            <small class="text-gray-400"
-              >{{ products ? products.length : 0 }} movimentações
-              existentes.</small
-            >
+            <small class="text-gray-400">{{
+              t("common.movements_count", {
+                count: products ? products.length : 0,
+              })
+            }}</small>
           </template>
         </DataTable>
       </div>

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useRouter, useRoute } from "vue-router";
+import { useI18n } from "vue-i18n";
 import * as authService from "@/services/auth/authService";
 import {
   PhBook,
@@ -33,6 +34,7 @@ const signout = async () => {
     console.log(error);
   }
 };
+const { t } = useI18n();
 </script>
 
 <template>
@@ -40,7 +42,7 @@ const signout = async () => {
     <div>
       <div>
         <div class="font-bold pl-5 pt-6 text-xs text-white mb-[-4px]">
-          <span>PRINCIPAL</span>
+          <span>{{ t("sidebar.section_main") }}</span>
         </div>
 
         <ul>
@@ -49,14 +51,14 @@ const signout = async () => {
             @click="goTo('home')"
           >
             <PhHouse :size="16" weight="fill" class="item-icon" />
-            <span class="item-text">Home</span>
+            <span class="item-text">{{ t("sidebar.home") }}</span>
           </li>
         </ul>
       </div>
 
       <div class="mt-6">
         <div class="font-bold pl-5 text-xs text-white mb-[-4px]">
-          <span>TRANSAÇÕES</span>
+          <span>{{ t("sidebar.section_transactions") }}</span>
         </div>
 
         <ul>
@@ -68,7 +70,7 @@ const signout = async () => {
             @click="goTo('deposit')"
           >
             <PhHandDeposit :size="16" weight="fill" class="item-icon" />
-            <span class="item-text">Depositar</span>
+            <span class="item-text">{{ t("sidebar.deposit") }}</span>
           </li>
           <li
             :class="[
@@ -78,7 +80,7 @@ const signout = async () => {
             @click="goTo('convert')"
           >
             <PhCoins :size="16" weight="fill" class="item-icon" />
-            <span class="item-text">Converter</span>
+            <span class="item-text">{{ t("sidebar.convert") }}</span>
           </li>
           <li
             :class="[
@@ -88,7 +90,7 @@ const signout = async () => {
             @click="goTo('withdraw')"
           >
             <PhHandWithdraw :size="16" weight="fill" class="item-icon" />
-            <span class="item-text">Sacar</span>
+            <span class="item-text">{{ t("sidebar.withdraw") }}</span>
           </li>
         </ul>
       </div>
@@ -98,11 +100,11 @@ const signout = async () => {
       <ul class="w-full">
         <li class="flex items-center gap-2">
           <PhWhatsappLogo :size="16" weight="fill" class="item-icon" />
-          <span class="item-text">Central de ajuda</span>
+          <span class="item-text">{{ t("sidebar.help_center") }}</span>
         </li>
         <li class="flex items-center gap-2" @click="signout">
           <PhSignOut :size="16" weight="fill" class="item-icon" />
-          <span class="item-text">Sair da conta</span>
+          <span class="item-text">{{ t("sidebar.sign_out") }}</span>
         </li>
       </ul>
     </div>

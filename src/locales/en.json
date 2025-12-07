@@ -1,0 +1,98 @@
+{
+  "home": {
+    "title": "Home",
+    "balance_brl": "Balance BRL",
+    "balance_usd": "Balance USD",
+    "liqd_quote": "LIQD Quote",
+    "last_movements": "Latest movements",
+    "quote_updated_every": "The quote value is updated every {seconds} seconds.",
+    "buy": "Buy",
+    "sell": "Sell"
+  },
+  "table": {
+    "date": "Date",
+    "type": "Type",
+    "currency": "Currency",
+    "value": "Amount",
+    "actions": "Actions",
+    "destination": "Destination",
+    "status": "Status"
+  },
+  "deposit": {
+    "title": "Deposit",
+    "subtitle": "Deposit your money",
+    "method": "Receiving method",
+    "pix": "PIX",
+    "pix_instant": "Instant transfer",
+    "proceed": "Proceed",
+    "ready_qr": "Ready to generate QR Code",
+    "select_and_proceed": "Select the currency and payment method, then click \"Proceed\".",
+    "balance": "Balance",
+    "qr_code": "QR Code",
+    "copy_qr": "Copy QR code",
+    "history": "Deposit history",
+    "status_confirmed": "Confirmed"
+  },
+  "withdraw": {
+    "title": "Withdraw",
+    "subtitle": "Withdraw your money",
+    "method": "Receiving method",
+    "amount_label": "Amount to withdraw",
+    "available": "Available balance: {amount} {currency}",
+    "min_value": "Minimum value: {value}",
+    "wallet_label": "Wallet",
+    "wallet_placeholder": "Your wallet address",
+    "network_fee": "Network fee",
+    "net_amount": "Net amount",
+    "withdraw_button": "Withdraw",
+    "note": "Crypto withdrawals can take a few minutes and network processing fees can be around {fee}.",
+    "history": "Withdraw history"
+  },
+  "sidebar": {
+    "section_main": "MAIN",
+    "section_transactions": "TRANSACTIONS",
+    "home": "Home",
+    "deposit": "Deposit",
+    "convert": "Convert",
+    "withdraw": "Withdraw",
+    "help_center": "Help center",
+    "sign_out": "Sign out"
+  },
+  "header": {
+    "my_profile": "My profile",
+    "logout": "Logout",
+    "language": "Language"
+  },
+  "convert": {
+    "title": "Convert",
+    "balance_brl": "Balance BRL",
+    "balance_usd": "Balance USD",
+    "available": "Available",
+    "min_value": "Minimum value: {value}",
+    "value_to_receive": "Amount to receive",
+    "usdt_buy_quote": "USDT buy quote",
+    "quote_notice": "*USDT quote values are updated every 12 seconds and may fluctuate according to market prices.",
+    "last_movements": "Latest movements"
+  },
+  "common": {
+    "converter_button": "Convert",
+    "max": "MAX",
+    "movements_count": "{count} movements found."
+  },
+  "languages": {
+    "english": "English",
+    "portuguese": "Portuguese",
+    "spanish": "Spanish"
+  },
+  "tags": {
+    "deposit": "Deposit",
+    "withdraw": "Withdraw",
+    "convert": "Conversion"
+  },
+  "moviment_status": {
+    "confirmed": "Confirmed",
+    "sent": "Sent",
+    "canceled": "Canceled",
+    "error": "Error"
+  }
+}
