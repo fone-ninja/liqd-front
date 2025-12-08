@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { PhArrowRight } from "@phosphor-icons/vue";
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
 
 const CRYPTO = {
   usdt: {
@@ -44,23 +47,23 @@ const CRYPTO = {
     <div class="mt-8">
       <ul>
         <li>
-          <span>ID da Transação</span>
+          <span>{{ t("modal.shared.transaction_id") }}</span>
           <span>#3243532</span>
         </li>
         <li>
-          <span>Data</span>
+          <span>{{ t("modal.shared.date") }}</span>
           <span>25/08/2025 16:07</span>
         </li>
         <li>
-          <span>Cotação USDT</span>
+          <span>{{ t("modal.shared.usd_quote") }}</span>
           <span>R$ 3,640.00</span>
         </li>
         <li>
-          <span>Operação</span>
+          <span>{{ t("modal.shared.operation") }}</span>
           <div class="flex flex-col items-end gap-1">
             <div class="flex items-center gap-2">
               <span>USDTBRL</span>
-              <Tag severity="success" value="Compra" />
+              <Tag severity="success" :value="t('modal.shared.buy')" />
             </div>
           </div>
         </li>

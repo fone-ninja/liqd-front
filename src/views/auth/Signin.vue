@@ -23,7 +23,7 @@ const goToHome = () => {
 <template>
   <div class="flex flex-col items-center justify-center h-screen w-full">
     <div class="flex justify-center">
-      <div class="w-[410px]">
+      <div class="w-10/12 lg:w-6/12">
         <img :src="logo" alt="logo" class="w-1/3" />
 
         <p class="py-5 text-xl font-bold text-white">
@@ -48,7 +48,7 @@ const goToHome = () => {
           </div>
 
           <div class="flex justify-between">
-            <div class="flex items-center gap-2">
+            <div class="items-center gap-2 hidden lg:flex">
               <Checkbox
                 v-model="pizza"
                 inputId="ingredient1"
@@ -69,7 +69,7 @@ const goToHome = () => {
             @click="goToHome"
           />
 
-          <Divider align="center" class="my-2!">
+          <Divider align="center" class="my-2! hidden! lg:block">
             <b>{{ t("auth.signin.no_account") }}</b>
           </Divider>
 

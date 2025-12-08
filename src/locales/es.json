@@ -94,6 +94,35 @@
     "canceled": "Cancelado",
     "error": "Error"
   },
+  "modal": {
+    "withdraw": {
+      "title": "Retiro",
+      "status_completed": "Completado"
+    },
+    "deposit": {
+      "title": "Depósito",
+      "status_completed": "Completado"
+    },
+    "convert": {
+      "title": "Conversión",
+      "status_completed": "Completado"
+    },
+    "shared": {
+      "download_receipt": "Descargar comprobante",
+      "transaction_id": "ID de transacción",
+      "date": "Fecha",
+      "amount": "Cantidad",
+      "depositor_name": "Nombre del depositante",
+      "depositor_doc": "Documento del depositante",
+      "hash": "Hash",
+      "view_receipt": "Ver comprobante",
+      "wallet": "Billetera",
+      "network": "Red",
+      "usd_quote": "Cotización USDT",
+      "operation": "Operación",
+      "buy": "Compra"
+    }
+  },
   "auth": {
     "signin": {
       "title": "Bienvenido a LIQD",

@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import { defineModel, defineProps } from "vue";
 import { PhFileText, PhCopy, PhDownload } from "@phosphor-icons/vue";
+import { useI18n } from "vue-i18n";
 import MovementWithdrawContent from "./MovementWithdrawContent.vue";
 import MovementConvertContent from "./MovementConvertContent.vue";
 import MovementDepositContent from "./MovementDepositContent.vue";
+
+const { t } = useI18n();
 
 defineProps({
   movement: {
@@ -18,15 +21,15 @@ const model = defineModel({ default: false });
 const MODAL_CONTENT = {
   withdraw: {
     contentComponent: MovementWithdrawContent,
-    title: "Saque",
+    title: "modal.withdraw.title",
   },
   convert: {
     contentComponent: MovementConvertContent,
-    title: "Conversão",
+    title: "modal.convert.title",
   },
   deposit: {
     contentComponent: MovementDepositContent,
-    title: "Depósito",
+    title: "modal.deposit.title",
   },
 };
 const CRYPTO = {
@@ -66,11 +69,11 @@ const CRYPTO = {
         </div>
         <div class="flex flex-col gap-1">
           <span class="text-lg font-semibold">{{
-            MODAL_CONTENT[movement.type].title
+            t(MODAL_CONTENT[movement.type].title)
           }}</span>
           <div class="flex items-center gap-2 text-green-400 text-sm">
             <div class="w-2 h-2 rounded bg-green-400"></div>
-            Concluída
+            {{ t("modal." + movement.type + ".status_completed") }}
           </div>
         </div>
       </div>
@@ -81,13 +84,15 @@ const CRYPTO = {
     <template #footer>
       <Button
         fluid
-        label="Baixar Comprovante"
+        :label="t('modal.shared.download_receipt')"
         @click="visible = false"
         autofocus
       >
         <div class="flex items-center justify-center gap-2">
           <PhDownload :size="18" weight="fill" />
-          <span class="font-bold">Baixar comprovante</span>
+          <span class="font-bold">{{
+            t("modal.shared.download_receipt")
+          }}</span>
         </div>
       </Button>
     </template>

@@ -131,7 +131,7 @@ await getProfile();
           <MovementCrypto crypto="brl" />
 
           <div class="mt-4">
-            <h3 class="font-bold text-white">Método de recebimento</h3>
+            <h3 class="font-bold text-white">{{ t("deposit.method") }}</h3>
             <div class="flex items-center gap-4 mt-2">
               <img
                 src="https://app.tcr.finance/img/depositar/pix.svg"

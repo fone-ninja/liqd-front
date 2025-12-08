@@ -20,7 +20,7 @@ const goToCodeSent = () => {
 <template>
   <div class="flex flex-col items-center justify-center h-screen w-full">
     <div class="flex justify-center">
-      <div class="w-[410px]">
+      <div class="w-10/12 lg:w-6/12">
         <img :src="logo" alt="logo" class="w-1/3" />
 
         <p class="py-5 text-xl font-bold text-white">

@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { PhCopy } from "@phosphor-icons/vue";
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
 
 const CRYPTO = {
   usdt: {
@@ -18,30 +21,30 @@ const CRYPTO = {
 <template>
   <div class="mt-6">
     <div class="flex items-center justify-center gap-2">
-      <img :src="CRYPTO.usdt.image" :alt="crypto" class="w-8 h-8" />
-      <span class="text-2xl text-white font-bold">-3,6640,00 USDT</span>
+      <img :src="CRYPTO.brl.image" :alt="crypto" class="w-8 h-8" />
+      <span class="text-2xl text-white font-bold">-3,6640,00 BRL</span>
     </div>
 
     <div class="mt-8">
       <ul>
         <li>
-          <span>ID da Transação</span>
+          <span>{{ t("modal.shared.transaction_id") }}</span>
           <span>#3243532</span>
         </li>
         <li>
-          <span>Data</span>
+          <span>{{ t("modal.shared.date") }}</span>
           <span>25/08/2025 16:07</span>
         </li>
         <li>
-          <span>Valor</span>
+          <span>{{ t("modal.shared.amount") }}</span>
           <span>3,640.00 USDT</span>
         </li>
         <li>
-          <span>Nome do depositante</span>
+          <span>{{ t("modal.shared.depositor_name") }}</span>
           <span>Eduardo Macedo</span>
         </li>
         <li>
-          <span>Doc. do Depositante</span>
+          <span>{{ t("modal.shared.depositor_doc") }}</span>
           <span class="font-semibold">61234565543</span>
         </li>
       </ul>

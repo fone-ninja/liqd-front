@@ -95,6 +95,35 @@
     "canceled": "Canceled",
     "error": "Error"
   },
+  "modal": {
+    "withdraw": {
+      "title": "Withdrawal",
+      "status_completed": "Completed"
+    },
+    "deposit": {
+      "title": "Deposit",
+      "status_completed": "Completed"
+    },
+    "convert": {
+      "title": "Conversion",
+      "status_completed": "Completed"
+    },
+    "shared": {
+      "download_receipt": "Download receipt",
+      "transaction_id": "Transaction ID",
+      "date": "Date",
+      "amount": "Amount",
+      "depositor_name": "Depositor name",
+      "depositor_doc": "Depositor document",
+      "hash": "Hash",
+      "view_receipt": "View receipt",
+      "wallet": "Wallet",
+      "network": "Network",
+      "usd_quote": "USDT quote",
+      "operation": "Operation",
+      "buy": "Buy"
+    }
+  },
   "auth": {
     "signin": {
       "title": "Welcome to LIQD",

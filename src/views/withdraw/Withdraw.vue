@@ -15,6 +15,7 @@ import {
   PhArrowDown,
   PhArrowRight,
   PhHandWithdraw,
+  PhInfo,
 } from "@phosphor-icons/vue";
 import dayjs from "dayjs";
 import { useQRCode } from "@vueuse/integrations/useQRCode";
@@ -116,7 +117,7 @@ await getProfile();
           <MovementCrypto crypto="usdt" />
 
           <div class="mt-4">
-            <h3 class="font-bold text-white">Método de recebimento</h3>
+            <h3 class="font-bold text-white">{{ t("withdraw.method") }}</h3>
             <div class="flex items-center gap-4 mt-2">
               <img
                 src="https://app.tcr.finance/img/coins/tron.svg"
@@ -138,7 +139,7 @@ await getProfile();
               t("withdraw.amount_label")
             }}</label>
             <InputGroup>
-              <InputNumber :placeholder="t('withdraw.amount_placeholder')" />
+              <InputNumber placeholder="0.00" />
               <InputGroupAddon>USDT</InputGroupAddon>
             </InputGroup>
             <div class="flex justify-between mt-1">
@@ -146,7 +147,9 @@ await getProfile();
                 >{{
                   t("withdraw.available", { amount: "0,00", currency: "USDT" })
                 }}
-                <span>{{ t("common.max") }}</span></small
+                <span class="text-[#E94F06] ml-2 cursor-pointer">{{
+                  t("common.max")
+                }}</span></small
               >
               <small>{{
                 t("withdraw.min_value", { value: "$ 100,00" })
@@ -168,7 +171,7 @@ await getProfile();
               <div class="pt-6 pb-4">
                 <hr />
               </div>
-              <div class="flex flex-col gap-2">
+              <div class="flex flex-col gap-1">
                 <div class="flex justify-between">
                   <span>{{ t("withdraw.network_fee") }}</span>
                   <span>$ 2.50</span>
@@ -182,12 +185,15 @@ await getProfile();
 
             <Button size="small" class="w-full mt-6">
               <div class="flex items-center gap-4">
-                <span class="font-semibold">Realizar saque</span>
+                <span class="font-semibold">{{
+                  t("withdraw.withdraw_button")
+                }}</span>
               </div>
             </Button>
 
             <div class="w-8/12 mt-2">
-              <p class="text-xs">
+              <p class="text-xs flex items-center gap-2">
+                <PhInfo size="16" />
                 {{ t("withdraw.note", { fee: "3 USDT" }) }}
               </p>
             </div>

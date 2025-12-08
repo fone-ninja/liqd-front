@@ -116,7 +116,7 @@ await getProfile();
     </h1>
 
     <div class="mt-12 w-full">
-      <div class="flex gap-2 mb-4">
+      <div class="flex flex-col lg:flex-row gap-2 mb-4">
         <div class="w-full bg-[#111111] p-6 rounded-lg">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2">
@@ -183,9 +183,9 @@ await getProfile();
       <div class="flex flex-col lg:flex-row gap-4">
         <div class="bg-[#111111] p-6 rounded-lg flex-1">
           <div
-            class="flex gap-4 border-b border-gray-400 pb-8 mb-4 justify-between items-start"
+            class="flex flex-col lg:flex-row gap-4 border-b border-gray-400 pb-8 mb-4 justify-between items-start"
           >
-            <div class="lg:w-1/2">
+            <div class="order-2 lg:w-1/2 lg:order-none">
               <InputNumber
                 placeholder="Price"
                 class="flex-1 lg:flex-initial lg:w-full"
@@ -199,7 +199,7 @@ await getProfile();
               </p>
             </div>
 
-            <MovementCrypto crypto="brl" />
+            <MovementCrypto crypto="brl" class="order-1 lg:order-none" />
           </div>
 
           <div class="flex flex-col">
@@ -227,8 +227,10 @@ await getProfile();
         </div>
 
         <div class="bg-[#111111] p-6 rounded-lg flex-1">
-          <div class="flex gap-4 pb-8 mb-4 justify-between">
-            <div class="lg:w-1/2">
+          <div
+            class="flex flex-col lg:flex-row gap-4 pb-8 mb-4 justify-between"
+          >
+            <div class="order-2 lg:w-1/2 lg:order-none">
               <InputNumber
                 placeholder="Price"
                 class="flex-1 lg:flex-initial lg:w-full"
@@ -238,7 +240,7 @@ await getProfile();
                 }"
               />
             </div>
-            <MovementCrypto crypto="usdt" />
+            <MovementCrypto crypto="usdt" class="order-1 lg:order-none" />
           </div>
         </div>
       </div>
