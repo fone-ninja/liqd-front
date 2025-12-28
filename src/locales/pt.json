@@ -164,5 +164,11 @@
       "email": "Email",
       "password": "Senha"
     }
+  },
+  "validation": {
+    "name_min_length": "Nome deve ter pelo menos 4 caracteres",
+    "email_invalid": "Email inválido",
+    "password_min_length": "Senha deve ter pelo menos 8 caracteres",
+    "passwords_do_not_match": "Senhas não coincidem"
   }
 }

@@ -1,13 +1,9 @@
-import * as authResource from '@/services/auth/authResource'
+import * as authResource from "@/services/auth/authResource";
 
-export const initiate = () => {
-  return authResource.initiate()
-}
+export const signin = (user) => {
+  return authResource.signin(user);
+};
 
-export const getUserData = () => {
-  return authResource.getUserData()
-}
-
-export const signout = () => {
-  return authResource.signout()
-}
+export const signup = (user) => {
+  return authResource.signup(user);
+};

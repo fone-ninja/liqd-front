@@ -164,5 +164,11 @@
       "email": "Email",
       "password": "Contraseña"
     }
+  },
+  "validation": {
+    "name_min_length": "El nombre debe tener al menos 4 caracteres",
+    "email_invalid": "Email inválido",
+    "password_min_length": "La contraseña debe tener al menos 8 caracteres",
+    "passwords_do_not_match": "Las contraseñas no coinciden"
   }
 }

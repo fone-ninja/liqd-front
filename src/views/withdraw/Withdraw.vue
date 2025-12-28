@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
-import useUser from "@/use/useUser/useUser.ts";
 import MovementTag from "@/components/movements/MovementTag.vue";
 import MovementCrypto from "@/components/movements/MovementCrypto.vue";
 import MovementModal from "@/components/movements/modal/MovementModal.vue";
@@ -80,18 +79,7 @@ const getFormatTime = (dateStr: string) => {
   return dayjs(dateStr).format("HH:mm");
 };
 
-const { getUser, user } = useUser();
 const { t } = useI18n();
-
-const getProfile = async () => {
-  try {
-    await getUser();
-  } catch (error) {
-    console.error("Error fetching user data:", error);
-  }
-};
-
-await getProfile();
 </script>
 
 <template>

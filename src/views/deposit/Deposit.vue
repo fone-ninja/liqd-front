@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, nextTick, shallowRef } from "vue";
 import { useI18n } from "vue-i18n";
-import useUser from "@/use/useUser/useUser.ts";
 import MovementTag from "@/components/movements/MovementTag.vue";
 import MovementCrypto from "@/components/movements/MovementCrypto.vue";
 import MovementStatus from "@/components/movements/MovementStatus.vue";
@@ -94,18 +93,7 @@ const generateQRCode = async () => {
   qrcodeLoading.value = false;
 };
 
-const { getUser, user } = useUser();
 const { t } = useI18n();
-
-const getProfile = async () => {
-  try {
-    await getUser();
-  } catch (error) {
-    console.error("Error fetching user data:", error);
-  }
-};
-
-await getProfile();
 </script>
 
 <template>
