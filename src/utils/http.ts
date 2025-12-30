@@ -11,28 +11,31 @@ const http = axios.create({
   },
 });
 
-// const publicRoutes = [...authRoutes[0].children.map((route) => route.name)];
+const publicRoutes = [...authRoutes[0].children.map((route) => route.name)];
 
-// http.interceptors.response.use(
-//   (response) => {
-//     return response;
-//   },
-//   (error) => {
-//     const isPublicRoute = publicRoutes.includes(
-//       router.currentRoute.value.name as string
-//     );
-//     const isUnauthorized = error.response && error.response.status === 401;
+if (localStorage.getItem("access-token")) {
+  const token = localStorage.getItem("access-token");
+  http.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+}
 
-//     if (!isPublicRoute && isUnauthorized) {
-//       console.log(publicRoutes, router.currentRoute.value.name);
+http.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    const isPublicRoute = publicRoutes.includes(
+      router.currentRoute.value.name as string
+    );
+    const isUnauthorized = error.response && error.response.status === 401;
 
-//       router.push({
-//         name: "signin",
-//       });
-//     }
+    if (!isPublicRoute && isUnauthorized) {
+      router.push({
+        name: "signin",
+      });
+    }
 
-//     return Promise.reject(error);
-//   }
-// );
+    return Promise.reject(error);
+  }
+);
 
 export default http;

@@ -54,6 +54,7 @@ declare module 'vue' {
     Textarea: typeof import('primevue/textarea')['default']
     TheWelcome: typeof import('./src/components/TheWelcome.vue')['default']
     TieredMenu: typeof import('primevue/tieredmenu')['default']
+    Toast: typeof import('primevue/toast')['default']
     UnicScan: typeof import('./src/components/scan/UnicScan.vue')['default']
     WelcomeItem: typeof import('./src/components/WelcomeItem.vue')['default']
   }

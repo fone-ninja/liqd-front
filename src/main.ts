@@ -2,6 +2,7 @@ import "./assets/main.css";
 import "./assets/tailwind.css";
 
 import PrimeVue from "primevue/config";
+import ToastService from "primevue/toastservice";
 import Aura from "@primeuix/themes/aura";
 
 import { createApp } from "vue";
@@ -38,5 +39,6 @@ app.use(PrimeVue, {
 
 app.use(router);
 app.use(i18n);
+app.use(ToastService);
 
 app.mount("#app");

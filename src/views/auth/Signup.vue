@@ -6,10 +6,12 @@ import useAuth from "@/use/useAuth/useAuth";
 import { useForm, useField } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
 import { z } from "zod";
+import { useToast } from "primevue/usetoast";
 
 const router = useRouter();
 const { t } = useI18n();
 const { signup } = useAuth();
+const toast = useToast();
 
 const signupSchema = toTypedSchema(
   z
@@ -50,10 +52,20 @@ const goToSignin = () => {
   router.push({ name: "signin" });
 };
 
+const showSuccess = () => {
+  toast.add({
+    severity: "success",
+    summary: t("auth.signup.success_toast_title"),
+    detail: t("auth.signup.success_toast_content"),
+    life: 5000,
+  });
+};
+
 const onSubmit = handleSubmit(async (values) => {
   try {
     await signup(values);
     goToSignin();
+    showSuccess();
   } catch (error) {
     console.log(error);
   }

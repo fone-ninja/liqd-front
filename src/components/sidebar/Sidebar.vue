@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useRouter, useRoute } from "vue-router";
 import { useI18n } from "vue-i18n";
-import * as authService from "@/services/auth/authService";
+import useAuth from "@/use/useAuth/useAuth";
 import {
   PhBook,
   PhHouse,
@@ -12,7 +12,7 @@ import {
   PhWhatsappLogo,
 } from "@phosphor-icons/vue";
 
-import logo from "../../../public/logo.png";
+const { signout } = useAuth();
 
 const router = useRouter();
 
@@ -26,9 +26,9 @@ const goTo = (routeName: string) => {
   router.push({ name: routeName });
 };
 
-const signout = async () => {
+const logout = async () => {
   try {
-    // await authService.signout();
+    await signout();
     router.replace({ name: "signin" });
   } catch (error) {
     console.log(error);
@@ -102,7 +102,7 @@ const { t } = useI18n();
           <PhWhatsappLogo :size="16" weight="fill" class="item-icon" />
           <span class="item-text">{{ t("sidebar.help_center") }}</span>
         </li>
-        <li class="flex items-center gap-2" @click="signout">
+        <li class="flex items-center gap-2" @click="logout">
           <PhSignOut :size="16" weight="fill" class="item-icon" />
           <span class="item-text">{{ t("sidebar.sign_out") }}</span>
         </li>

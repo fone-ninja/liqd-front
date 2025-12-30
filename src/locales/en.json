@@ -139,7 +139,9 @@
       "confirm_password_label": "Confirm password",
       "create_button": "Create",
       "have_account": "Already have an account?",
-      "signin_button": "Sign in"
+      "signin_button": "Sign in",
+      "success_toast_title": "Conta criada com sucesso",
+      "success_toast_content": "Acesse sua conta para entrar na plataforma"
     },
     "forgot": {
       "title": "Forgot password",
@@ -170,6 +172,7 @@
     "name_min_length": "Name must be at least 4 characters",
     "email_invalid": "Invalid email",
     "password_min_length": "Password must be at least 8 characters",
+    "password_empty": "É necessário informar uma senha",
     "passwords_do_not_match": "Passwords do not match"
   }
 }

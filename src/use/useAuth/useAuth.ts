@@ -1,5 +1,6 @@
 import { computed, reactive } from "vue";
 import * as authService from "@/services/auth/authService";
+import type { UserSigninDTO, UserSignupDTO } from "@/types/auth";
 
 const state = reactive({
   user: {},
@@ -7,21 +8,27 @@ const state = reactive({
 });
 
 export default function useAuth() {
-  const signin = async ({ user }) => {
+  const signin = async (user: UserSigninDTO) => {
     try {
-      const { data } = await authService.signin(user);
-
-      console.log("autenticado", data);
+      const data = await authService.signin(user);
+      localStorage.setItem("access-token", data.token);
     } catch (error) {
       throw error;
     }
   };
 
-  const signup = async ({ email, name, password }) => {
+  const signup = async ({ email, name, password }: UserSignupDTO) => {
     try {
-      const { data } = await authService.signup({ email, name, password });
+      await authService.signup({ email, name, password });
+    } catch (error) {
+      throw error;
+    }
+  };
 
-      console.log("registrado", data);
+  const signout = async () => {
+    try {
+      await authService.signout();
+      localStorage.removeItem("access-token");
     } catch (error) {
       throw error;
     }
@@ -34,5 +41,6 @@ export default function useAuth() {
   return {
     signin,
     signup,
+    signout,
   };
 }

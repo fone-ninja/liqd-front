@@ -11,11 +11,11 @@ import {
   PhEyeSlash,
   PhFlag,
 } from "@phosphor-icons/vue";
-
-import * as authService from "@/services/auth/authService";
-
+import useAuth from "@/use/useAuth/useAuth";
 import { markRaw, ref, computed, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
+
+const { signout } = useAuth();
 
 const router = useRouter();
 const hiddenValues = ref(false);
@@ -39,9 +39,9 @@ const amoountBRLShown = computed(() => {
   return `${amountBRL.value.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}`;
 });
 
-const signout = async () => {
+const logout = async () => {
   try {
-    // await authService.signout();
+    await signout();
     router.replace({ name: "signin" });
   } catch (error) {
     console.log(error);
@@ -101,7 +101,7 @@ const items = ref([
     label: t("header.logout"),
     icon: markRaw(PhSignOut),
     command: () => {
-      signout();
+      logout();
     },
   },
   {

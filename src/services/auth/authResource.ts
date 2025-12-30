@@ -1,9 +1,17 @@
 import http from "@/utils/http";
+import type { UserSigninDTO, UserSignupDTO } from "@/types/auth";
 
-export const signin = (user) => {
-  return http.post("/login", user).then(({ data }) => data);
+export const signin = (user: UserSigninDTO) => {
+  return http.post("/login", user).then(({ data }) => {
+    http.defaults.headers.common["Authorization"] = `Bearer ${data.token}`;
+    return data;
+  });
 };
 
-export const signup = (user) => {
+export const signup = (user: UserSignupDTO) => {
   return http.post("/register", user).then(({ data }) => data);
+};
+
+export const signout = () => {
+  return http.post("/logout").then(({ data }) => data);
 };
