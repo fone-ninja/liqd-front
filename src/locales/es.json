@@ -63,6 +63,9 @@
     "logout": "Cerrar sesión",
     "language": "Idioma"
   },
+  "profile": {
+    "title": "Mi Perfil"
+  },
   "convert": {
     "title": "Convertir",
     "balance_brl": "Saldo BRL",

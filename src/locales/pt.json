@@ -72,6 +72,9 @@
     "logout": "Sair",
     "language": "Idioma"
   },
+  "profile": {
+    "title": "Meu Perfil"
+  },
   "common": {
     "converter_button": "Converter",
     "max": "MAX",

@@ -63,6 +63,9 @@
     "logout": "Logout",
     "language": "Language"
   },
+  "profile": {
+    "title": "My Profile"
+  },
   "convert": {
     "title": "Convert",
     "balance_brl": "Balance BRL",

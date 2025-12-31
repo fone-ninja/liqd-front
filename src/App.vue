@@ -1,8 +1,14 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import Loading from "@/components/fallback/Loading.vue";
+import { useUiStore } from "@/stores/uiStore";
+
+const uiStore = useUiStore();
+</script>
 
 <template>
   <Toast />
-  <RouterView />
+  <Loading v-if="uiStore.loadingScreen" />
+  <RouterView v-else />
 </template>
 
 <style scoped>

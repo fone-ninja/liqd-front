@@ -55,6 +55,9 @@ const items = ref([
     id: "profile",
     label: t("header.my_profile"),
     icon: markRaw(PhUser),
+    command: () => {
+      router.push({ name: "profile" });
+    },
   },
   {
     id: "language",

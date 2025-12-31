@@ -102,15 +102,15 @@ const onSubmit = handleSubmit(async (values) => {
             }}</small>
           </div>
 
-          <div class="flex justify-between">
-            <div class="items-center gap-2 hidden lg:flex">
+          <div class="flex justify-end">
+            <!-- <div class="items-center gap-2 hidden lg:flex">
               <Checkbox
                 inputId="ingredient1"
                 name="remember"
                 value="remember"
               />
               <label for="ingredient1"> {{ t("auth.signin.remember") }} </label>
-            </div>
+            </div> -->
 
             <span class="cursor-pointer" @click="goToForgotPassword">
               {{ t("auth.signin.forgot_password") }}

@@ -1,16 +1,15 @@
 import { computed, reactive } from "vue";
 import * as authService from "@/services/auth/authService";
+import { userStore } from "@/stores/userStore";
 import type { UserSigninDTO, UserSignupDTO } from "@/types/auth";
 
-const state = reactive({
-  user: {},
-  isAuthenticated: false,
-});
+const userState = userStore();
 
 export default function useAuth() {
   const signin = async (user: UserSigninDTO) => {
     try {
       const data = await authService.signin(user);
+      userState.setUser(data.user_info);
       localStorage.setItem("access-token", data.token);
     } catch (error) {
       throw error;
@@ -33,10 +32,6 @@ export default function useAuth() {
       throw error;
     }
   };
-
-  const user = computed(() => {
-    return state.user;
-  });
 
   return {
     signin,
