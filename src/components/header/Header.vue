@@ -51,7 +51,7 @@ const logout = async () => {
 
 const menu = ref();
 const { t, locale } = useI18n();
-const items = ref([
+const items = computed(() => [
   {
     id: "profile",
     label: t("header.my_profile"),

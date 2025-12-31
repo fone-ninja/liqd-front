@@ -28,7 +28,7 @@ const { t } = useI18n();
       <div class="flex flex-col w-full bg-[#111111] p-6 rounded-lg mt-4">
         <div class="flex gap-8">
           <div
-            class="rounded-full bg-blue-400 text-white h-[112px] w-[112px] flex items-center justify-center font-bold cursor-pointer text-4xl"
+            class="hidden lg:flex rounded-full bg-blue-400 text-white h-[112px] w-[112px] flex items-center justify-center font-bold cursor-pointer text-4xl"
           >
             {{ getInitials(userState.userData?.name) }}
           </div>
