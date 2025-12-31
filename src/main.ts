@@ -1,6 +1,9 @@
 import "./assets/main.css";
 import "./assets/tailwind.css";
 
+import { setInitialDateLocal } from "@/utils/date";
+import { getInitialLocale } from "@/utils/locale";
+
 import PrimeVue from "primevue/config";
 import ToastService from "primevue/toastservice";
 import Aura from "@primeuix/themes/aura";
@@ -15,18 +18,21 @@ import en from "./locales/en.json";
 import es from "./locales/es.json";
 import pt from "./locales/pt.json";
 
+import "dayjs/locale/pt-br";
+import "dayjs/locale/en";
+import "dayjs/locale/es";
+
+setInitialDateLocal();
+
 const messages = {
   en,
   es,
   pt,
 };
 
-const savedLocale =
-  typeof window !== "undefined" ? localStorage.getItem("locale") : null;
-
 const i18n = createI18n({
   legacy: false,
-  locale: savedLocale || "en",
+  locale: getInitialLocale(),
   fallbackLocale: "en",
   messages,
 });

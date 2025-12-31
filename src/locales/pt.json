@@ -73,7 +73,8 @@
     "language": "Idioma"
   },
   "profile": {
-    "title": "Meu Perfil"
+    "title": "Meu Perfil",
+    "member": "Membro desde"
   },
   "common": {
     "converter_button": "Converter",

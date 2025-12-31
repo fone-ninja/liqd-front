@@ -3,10 +3,7 @@ import { useRouter } from "vue-router";
 import logo from "../../../public/logo.png";
 import {
   PhUser,
-  PhGear,
-  PhMoney,
   PhSignOut,
-  PhArrowClockwise,
   PhEye,
   PhEyeSlash,
   PhFlag,
@@ -14,10 +11,14 @@ import {
 import useAuth from "@/use/useAuth/useAuth";
 import { markRaw, ref, computed, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
+import { setDateLocal } from "@/utils/date";
+import { userStore } from "@/stores/userStore";
+import { getInitials } from "@/utils/text";
 
 const { signout } = useAuth();
 
 const router = useRouter();
+const userState = userStore();
 const hiddenValues = ref(false);
 
 const amountUSDT = ref(3000);
@@ -71,8 +72,10 @@ const items = ref([
         img: "https://app.tcr.finance/img/language_flags/EN.svg",
         command: () => {
           locale.value = "en";
-          if (typeof window !== "undefined")
+          if (typeof window !== "undefined") {
             localStorage.setItem("locale", "en");
+            setDateLocal("en");
+          }
         },
       },
       {
@@ -82,8 +85,10 @@ const items = ref([
         img: "https://app.tcr.finance/img/language_flags/pt-BR.svg",
         command: () => {
           locale.value = "pt";
-          if (typeof window !== "undefined")
+          if (typeof window !== "undefined") {
             localStorage.setItem("locale", "pt");
+            setDateLocal("pt");
+          }
         },
       },
       {
@@ -93,8 +98,10 @@ const items = ref([
         img: "https://app.tcr.finance/img/language_flags/ES.svg",
         command: () => {
           locale.value = "es";
-          if (typeof window !== "undefined")
+          if (typeof window !== "undefined") {
             localStorage.setItem("locale", "es");
+            setDateLocal("es");
+          }
         },
       },
     ],
@@ -204,7 +211,7 @@ const goTo = (routeName: string) => {
         class="ml-8 rounded-full bg-blue-400 text-white h-[36px] w-[36px] flex items-center justify-center font-bold cursor-pointer"
         @click="toggle"
       >
-        ER
+        {{ getInitials(userState.userData?.name) }}
       </div>
       <TieredMenu ref="menu" id="overlay_menu" :model="items" :popup="true">
         <template #item="{ item, props, hasSubmenu }">
@@ -228,7 +235,7 @@ const goTo = (routeName: string) => {
               class="mr-2 w-[26px]! h-[26px]!"
               shape="circle"
             />
-            <small class="font-bold">eduardo@gmail.com</small>
+            <small class="font-bold">{{ userState.userData?.email }}</small>
           </div>
         </template>
       </TieredMenu>

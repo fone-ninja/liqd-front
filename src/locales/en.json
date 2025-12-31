@@ -64,7 +64,8 @@
     "language": "Language"
   },
   "profile": {
-    "title": "My Profile"
+    "title": "My Profile",
+    "member": "Member since"
   },
   "convert": {
     "title": "Convert",
