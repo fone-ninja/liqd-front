@@ -12,7 +12,3 @@ export const getQuote = () => {
 export const createQuote = (data: QuoteDTO) => {
   return quoteResource.createQuote(data);
 };
-
-export const createTransactions = () => {
-  return quoteResource.createTransactions();
-};

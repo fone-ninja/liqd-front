@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, shallowRef } from "vue";
+import { ref, computed, shallowRef, onMounted } from "vue";
 import { useClipboard } from "@vueuse/core";
 import { useI18n } from "vue-i18n";
 import MovementCrypto from "@/components/movements/MovementCrypto.vue";
@@ -8,60 +8,20 @@ import MovementModal from "@/components/movements/modal/MovementModal.vue";
 import { PhArrowRight, PhFile, PhPlus } from "@phosphor-icons/vue";
 import dayjs from "dayjs";
 import { useQRCode } from "@vueuse/integrations/useQRCode";
+import useTransaction from "@/use/useTransaction/useTransaction";
 import { userStore } from "@/stores/userStore";
+import { formatCurrency } from "@/utils/currency";
 
 const userState = userStore();
+const { getTransaction, getTransactions } = useTransaction();
 
+const deposits = ref([]);
 const pixQrCode = shallowRef("");
 const qrcode = useQRCode(pixQrCode);
 const qrcodeLoading = ref(false);
 
 const showMovementModal = ref(false);
 const movement = ref(null);
-
-const products = [
-  {
-    id: "1000",
-    code: "f230fh0g3",
-    name: "Bamboo Watch",
-    description: "Product Description",
-    price: 653333.12,
-    category: "Accessories",
-    quantity: 24,
-    inventoryStatus: "INSTOCK",
-    type: "deposit",
-    date: "2018-04-04T16:00:00.000Z",
-    crypto: "brl",
-  },
-  {
-    id: "1001",
-    code: "nvklal433",
-    name: "Black Watch",
-    description: "Product Description",
-    price: 72,
-    category: "Accessories",
-    quantity: 61,
-    inventoryStatus: "INSTOCK",
-    rating: 4,
-    type: "deposit",
-    date: "2018-04-04T16:00:00.000Z",
-    crypto: "brl",
-  },
-  {
-    id: "1001",
-    code: "nvklal433",
-    name: "Black Watch",
-    description: "Product Description",
-    price: 72,
-    category: "Accessories",
-    quantity: 61,
-    inventoryStatus: "INSTOCK",
-    rating: 4,
-    type: "deposit",
-    date: "2018-04-04T16:00:00.000Z",
-    crypto: "brl",
-  },
-];
 
 const getFormatDate = (dateStr: string) => {
   return dayjs(dateStr).format("DD MMM. YYYY").toLowerCase();
@@ -100,6 +60,27 @@ const copyQrToClipboard = () => {
     copy(pixQrCode.value);
   }
 };
+
+const getHistory = async () => {
+  const params = {
+    filters: {
+      movable_type: {
+        $eq: "deposit",
+      },
+    },
+  };
+
+  try {
+    const data = await getTransactions(params);
+    deposits.value = data.filter((el) => el.movable_type === "deposit");
+  } catch (error) {
+    console.error("Error fetching transactions:", error);
+  }
+};
+
+onMounted(() => {
+  getHistory();
+});
 </script>
 
 <template>
@@ -241,7 +222,10 @@ const copyQrToClipboard = () => {
 
     <div>
       <div class="mt-4 w-full bg-[#111111] p-2 rounded-lg">
-        <DataTable :value="products" tableStyle="min-width: 50rem" scrollable>
+        <DataTable :value="deposits" tableStyle="min-width: 50rem" scrollable>
+          <template #empty>
+            Não há dados para serem exibidos. Faça seu primeiro depósito.
+          </template>
           <template #header>
             <div class="flex flex-wrap items-center justify-between gap-2">
               <span class="text-xl font-bold">{{ t("deposit.history") }}</span>
@@ -249,30 +233,43 @@ const copyQrToClipboard = () => {
           </template>
           <Column field="name" :header="t('table.date')">
             <template #body="slotProps">
-              <p>{{ getFormatDate(slotProps.data.date) }}</p>
+              <p>{{ getFormatDate(slotProps.data.created_at) }}</p>
               <small class="text-gray-400">{{
-                getFormatTime(slotProps.data.date)
+                getFormatTime(slotProps.data.created_at)
               }}</small>
             </template>
           </Column>
+
           <Column field="price" :header="t('table.currency')">
             <template #body="slotProps">
-              <MovementCrypto :crypto="slotProps.data.crypto" />
+              <MovementCrypto crypto="brl" />
             </template>
           </Column>
 
           <Column field="category" :header="t('table.value')">
             <template #body="slotProps">
-              <span v-if="slotProps.price < 0" class="text-red-400">-</span>
-              <span v-else class="text-green-400">+</span>
-              {{ Math.abs(slotProps.data.price) }}
-              {{ slotProps.data.crypto.toUpperCase() }}
+              <div>
+                <span v-if="slotProps.data.amount_brl < 0" class="text-red-400"
+                  >-</span
+                >
+                <span v-else class="text-green-400">+</span>
+                {{ Math.abs(slotProps.data.amount_brl) }} BRL
+              </div>
+              <small class="text-xs text-surface-400"
+                >≈
+                {{
+                  formatCurrency({
+                    value: Number(slotProps.data.amount_usdt || 0),
+                    symbol: "$",
+                  })
+                }}</small
+              >
             </template>
           </Column>
 
           <Column :header="t('table.status')">
             <template #body="slotProps">
-              <MovementStatus type="confirmed" />
+              <MovementStatus :type="slotProps.data.status" />
             </template>
           </Column>
 
@@ -301,7 +298,7 @@ const copyQrToClipboard = () => {
           <template #footer>
             <small class="text-gray-400">{{
               t("common.movements_count", {
-                count: products ? products.length : 0,
+                count: deposits ? deposits.length : 0,
               })
             }}</small>
           </template>

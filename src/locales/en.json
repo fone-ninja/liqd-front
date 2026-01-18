@@ -91,13 +91,18 @@
   "tags": {
     "deposit": "Deposit",
     "withdraw": "Withdraw",
-    "convert": "Conversion"
+    "convert": "Conversion",
+    "trade": "Conversion",
+    "withdrawal": "Withdrawal"
   },
   "moviment_status": {
     "confirmed": "Confirmed",
     "sent": "Sent",
     "canceled": "Canceled",
-    "error": "Error"
+    "error": "Error",
+    "pending": "Pending",
+    "processing": "Processing",
+    "completed": "Completed"
   },
   "modal": {
     "withdraw": {

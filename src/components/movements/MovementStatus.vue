@@ -12,7 +12,10 @@ const { t } = useI18n();
 
 const TAG_TYPES = {
   confirmed: { severity: "success" },
+  completed: { severity: "success" },
+  processing: { severity: "info" },
   sent: { severity: "info" },
+  pending: { severity: "warn" },
   canceled: { severity: "danger" },
   error: { severity: "danger" },
 };

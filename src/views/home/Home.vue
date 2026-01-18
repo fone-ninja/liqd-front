@@ -1,12 +1,14 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, nextTick } from "vue";
+import { ref, computed, onMounted, onUnmounted, watch, nextTick } from "vue";
 import { useUiStore } from "@/stores/uiStore";
 import { useI18n } from "vue-i18n";
 import MovementTag from "@/components/movements/MovementTag.vue";
 import MovementCrypto from "@/components/movements/MovementCrypto.vue";
 import MovementModal from "@/components/movements/modal/MovementModal.vue";
+import ConvertCrypto from "@/components/convert/ConvertCrypto.vue";
 import { userStore } from "@/stores/userStore";
 import { quoteStore } from "@/stores/quoteStore";
+import useTransaction from "@/use/useTransaction/useTransaction";
 import {
   PhEye,
   PhEyeSlash,
@@ -21,52 +23,9 @@ import { formatCurrency } from "@/utils/currency";
 const { t } = useI18n();
 const toast = useToast();
 
-const products = [
-  {
-    id: "1000",
-    code: "f230fh0g3",
-    name: "Bamboo Watch",
-    description: "Product Description",
-    price: 653333.12,
-    category: "Accessories",
-    quantity: 24,
-    inventoryStatus: "INSTOCK",
-    type: "convert",
-    date: "2018-04-04T16:00:00.000Z",
-    crypto: "usdt",
-  },
-  {
-    id: "1001",
-    code: "nvklal433",
-    name: "Black Watch",
-    description: "Product Description",
-    price: 72,
-    category: "Accessories",
-    quantity: 61,
-    inventoryStatus: "INSTOCK",
-    rating: 4,
-    type: "deposit",
-    date: "2018-04-04T16:00:00.000Z",
-    crypto: "brl",
-  },
-  {
-    id: "1001",
-    code: "nvklal433",
-    name: "Black Watch",
-    description: "Product Description",
-    price: 72,
-    category: "Accessories",
-    quantity: 61,
-    inventoryStatus: "INSTOCK",
-    rating: 4,
-    type: "withdraw",
-    date: "2018-04-04T16:00:00.000Z",
-    crypto: "usdt",
-  },
-];
-
 const showMovementModal = ref(false);
 const movement = ref(null);
+const movements = ref([]);
 
 const hiddenBRL = ref(false);
 const hiddenUSD = ref(false);
@@ -77,8 +36,7 @@ const valueRef = ref<HTMLElement | null>(null);
 const barWidth = ref("130px");
 const userState = userStore();
 const quoteState = quoteStore();
-
-const quoteValue = ref<number>(252222.0);
+const { getTransaction, getTransactions } = useTransaction();
 
 let spinnerInterval: ReturnType<typeof setInterval> | null = null;
 
@@ -146,9 +104,26 @@ const updateAmount = async () => {
   }
 };
 
+const getMovements = async () => {
+  try {
+    const data = await getTransactions();
+    movements.value = data;
+  } catch (error) {
+    console.error("Error fetching transactions:", error);
+  }
+};
+
+watch(
+  () => quoteState.quoteData,
+  async () => {
+    await nextTick();
+    updateBarWidth();
+  }
+);
+
 onMounted(() => {
-  updateBarWidth();
   startSpinner();
+  getMovements();
   window.addEventListener("resize", updateBarWidth);
 });
 
@@ -265,11 +240,13 @@ onUnmounted(() => {
                     ref="valueRef"
                     class="text-3xl text-green-500"
                     v-if="+(quoteState.quoteData?.offer_price || 0) !== 0"
-                    ><b>{{
-                      formatCurrency({
-                        value: Number(quoteState.quoteData?.offer_price || 0),
-                      })
-                    }}</b></span
+                    ><b
+                      >{{
+                        formatCurrency({
+                          value: Number(quoteState.quoteData?.offer_price || 0),
+                        })
+                      }}
+                    </b></span
                   >
                   <Skeleton
                     v-else
@@ -314,7 +291,7 @@ onUnmounted(() => {
 
     <div>
       <div class="mt-4 w-full bg-[#111111] p-2 rounded-lg">
-        <DataTable :value="products" tableStyle="min-width: 50rem" scrollable>
+        <DataTable :value="movements" tableStyle="min-width: 50rem" scrollable>
           <template #header>
             <div class="flex flex-wrap items-center justify-between gap-2">
               <span class="text-xl font-bold">{{
@@ -322,35 +299,66 @@ onUnmounted(() => {
               }}</span>
             </div>
           </template>
+          <template #empty> Não há dados para serem exibidos.</template>
+
           <Column field="name" :header="t('table.date')">
             <template #body="slotProps">
-              <p>{{ getFormatDate(slotProps.data.date) }}</p>
+              <p>{{ getFormatDate(slotProps.data.created_at) }}</p>
               <small class="text-gray-400">{{
-                getFormatTime(slotProps.data.date)
+                getFormatTime(slotProps.data.created_at)
               }}</small>
             </template>
           </Column>
+
           <Column :header="t('table.type')">
             <template #body="slotProps">
-              <MovementTag :type="slotProps.data.type" />
+              <MovementTag :type="slotProps.data.movable_type" />
             </template>
           </Column>
+
           <Column field="price" :header="t('table.currency')">
             <template #body="slotProps">
-              <MovementCrypto :crypto="slotProps.data.crypto" />
+              <MovementCrypto
+                v-if="slotProps.data.movable_type === 'deposit'"
+                :crypto="'brl'"
+              />
+              <MovementCrypto
+                v-if="slotProps.data.movable_type === 'withdrawal'"
+                :crypto="'trx'"
+              />
+              <ConvertCrypto
+                v-if="slotProps.data.movable_type === 'trade'"
+                :cryptoFrom="'brl'"
+                :cryptoTo="'usdt'"
+              />
             </template>
           </Column>
+
           <Column field="category" :header="t('table.value')">
             <template #body="slotProps">
-              <span v-if="slotProps.price < 0" class="text-red-400">-</span>
-              <span v-else class="text-green-400">+</span>
-              {{ Math.abs(slotProps.data.price) }}
-              {{ slotProps.data.crypto.toUpperCase() }}
+              <div v-if="slotProps.data.movable_type === 'deposit'">
+                <span class="text-green-400">+</span>
+                {{ Math.abs(slotProps.data.amount_brl) }}
+                BRL
+              </div>
+
+              <div v-if="slotProps.data.movable_type === 'withdrawal'">
+                <div>
+                  <span class="text-red-400">- </span>
+                  <span> {{ Math.abs(slotProps.data.amount_usdt) }} USDT</span>
+                </div>
+                <small class="text-xs text-surface-400">≈ 120 TRX</small>
+              </div>
+
+              <div v-if="slotProps.data.movable_type === 'trade'">
+                <span class="text-green-400">+</span>
+                {{ Math.abs(slotProps.data.amount_usdt) }}
+                USDT
+              </div>
             </template>
           </Column>
 
           <Column
-            field="balance"
             :header="t('table.actions')"
             alignFrozen="right"
             frozen
@@ -374,7 +382,7 @@ onUnmounted(() => {
           <template #footer>
             <small class="text-gray-400">{{
               t("common.movements_count", {
-                count: products ? products.length : 0,
+                count: movements ? movements.length : 0,
               })
             }}</small>
           </template>

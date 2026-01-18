@@ -90,13 +90,18 @@
   "tags": {
     "deposit": "Depósito",
     "withdraw": "Saque",
-    "convert": "Conversão"
+    "convert": "Conversão",
+    "trade": "Conversão",
+    "withdrawal": "Saque"
   },
   "moviment_status": {
     "confirmed": "Confirmado",
     "sent": "Enviado",
     "canceled": "Cancelado",
-    "error": "Erro"
+    "error": "Erro",
+    "pending": "Pendente",
+    "processing": "Em processamento",
+    "completed": "Concluído"
   },
   "modal": {
     "withdraw": {

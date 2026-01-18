@@ -17,6 +17,11 @@ const CRYPTO = {
     symbol: "BRL",
     image: "https://app.tcr.finance/img/home/flag_brazil.svg",
   },
+  trx: {
+    name: "Tron",
+    symbol: "TRX",
+    image: "https://app.tcr.finance/img/coins/tron.svg",
+  },
 };
 </script>
 

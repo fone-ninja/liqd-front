@@ -24,6 +24,8 @@ const TAG_TYPES = {
   deposit: { severity: "success", icon: PhArrowUp },
   withdraw: { severity: "danger", icon: PhArrowDown },
   convert: { severity: "info", icon: PhArrowsClockwise },
+  withdrawal: { severity: "danger", icon: PhArrowDown },
+  trade: { severity: "info", icon: PhArrowsClockwise },
 };
 </script>
 

@@ -14,7 +14,3 @@ export const getQuote = (): Promise<QuoteResponse> => {
 export const createQuote = (data: QuoteDTO): Promise<QuoteResponse> => {
   return http.post("/quote", data).then(({ data }) => data);
 };
-
-export const createTransactions = () => {
-  return http.post("/transactions").then(({ data }) => data);
-};

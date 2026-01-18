@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 import MovementTag from "@/components/movements/MovementTag.vue";
 import MovementCrypto from "@/components/movements/MovementCrypto.vue";
@@ -19,14 +19,18 @@ import { quoteStore } from "@/stores/quoteStore";
 import { useToast } from "primevue/usetoast";
 import type { InputNumberInputEvent } from "primevue/inputnumber";
 import { formatCurrency } from "@/utils/currency";
+import useTransaction from "@/use/useTransaction/useTransaction";
 
 const { t } = useI18n();
 const toast = useToast();
 const showMovementModal = ref(false);
 const movement = ref(null);
+const { getTransaction, getTransactions } = useTransaction();
 
 const hiddenFrom = ref(false);
 const hiddenTo = ref(false);
+
+const latestMovements = ref([]);
 
 const userState = userStore();
 const quoteState = quoteStore();
@@ -162,6 +166,27 @@ const resultConvertedAmount = computed(() => {
 const newWalletBalanceUSDT = computed(() => {
   const currentUSDT = userState.userData?.usdt || 0;
   return currentUSDT + (usdtBalance.value || 0);
+});
+
+const getLatestMovements = async () => {
+  const params = {
+    filters: {
+      movable_type: {
+        $eq: "trade",
+      },
+    },
+  };
+
+  try {
+    const data = await getTransactions(params);
+    latestMovements.value = data.filter((el) => el.movable_type === "trade");
+  } catch (error) {
+    console.error("Error fetching transactions:", error);
+  }
+};
+
+onMounted(() => {
+  getLatestMovements();
 });
 </script>
 
@@ -386,7 +411,11 @@ const newWalletBalanceUSDT = computed(() => {
 
     <div>
       <div class="mt-4 w-full bg-[#111111] p-2 rounded-lg">
-        <DataTable :value="products" tableStyle="min-width: 50rem" scrollable>
+        <DataTable
+          :value="latestMovements"
+          tableStyle="min-width: 50rem"
+          scrollable
+        >
           <template #header>
             <div class="flex flex-wrap items-center justify-between gap-2">
               <span class="text-xl font-bold">{{
@@ -394,33 +423,37 @@ const newWalletBalanceUSDT = computed(() => {
               }}</span>
             </div>
           </template>
+
+          <template #empty>
+            Não há dados para serem exibidos. Faça sua primeira conversão.
+          </template>
+
           <Column field="name" :header="t('table.date')">
             <template #body="slotProps">
-              <p>{{ getFormatDate(slotProps.data.date) }}</p>
+              <p>{{ getFormatDate(slotProps.data.created_at) }}</p>
               <small class="text-gray-400">{{
-                getFormatTime(slotProps.data.date)
+                getFormatTime(slotProps.data.created_at)
               }}</small>
             </template>
           </Column>
+
           <Column :header="t('table.type')">
             <template #body="slotProps">
-              <MovementTag :type="slotProps.data.type" />
+              <MovementTag :type="slotProps.data.movable_type" />
             </template>
           </Column>
+
           <Column field="price" :header="t('table.currency')">
             <template #body="slotProps">
-              <ConvertCrypto
-                :cryptoFrom="slotProps.data.cryptoFrom"
-                :cryptoTo="slotProps.data.cryptoTo"
-              />
+              <ConvertCrypto :cryptoFrom="'brl'" :cryptoTo="'usdt'" />
             </template>
           </Column>
+
           <Column field="category" :header="t('table.value')">
             <template #body="slotProps">
-              <span v-if="slotProps.price < 0" class="text-red-400">-</span>
-              <span v-else class="text-green-400">+</span>
-              {{ Math.abs(slotProps.data.price) }}
-              {{ slotProps.data.cryptoTo.toUpperCase() }}
+              <span class="text-green-400">+</span>
+              {{ Math.abs(slotProps.data.amount_usdt) }}
+              USDT
             </template>
           </Column>
 
@@ -449,7 +482,7 @@ const newWalletBalanceUSDT = computed(() => {
           <template #footer>
             <small class="text-gray-400">{{
               t("common.movements_count", {
-                count: products ? products.length : 0,
+                count: latestMovements ? latestMovements.length : 0,
               })
             }}</small>
           </template>
