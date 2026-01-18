@@ -1,24 +1,16 @@
 <script setup lang="ts">
-import { ref, nextTick, shallowRef } from "vue";
+import { ref, computed, shallowRef } from "vue";
+import { useClipboard } from "@vueuse/core";
 import { useI18n } from "vue-i18n";
-import MovementTag from "@/components/movements/MovementTag.vue";
 import MovementCrypto from "@/components/movements/MovementCrypto.vue";
 import MovementStatus from "@/components/movements/MovementStatus.vue";
 import MovementModal from "@/components/movements/modal/MovementModal.vue";
-import {
-  PhBook,
-  PhHouse,
-  PhEye,
-  PhEyeSlash,
-  PhArrowsClockwise,
-  PhArrowUp,
-  PhArrowDown,
-  PhArrowRight,
-  PhFile,
-  PhPlus,
-} from "@phosphor-icons/vue";
+import { PhArrowRight, PhFile, PhPlus } from "@phosphor-icons/vue";
 import dayjs from "dayjs";
 import { useQRCode } from "@vueuse/integrations/useQRCode";
+import { userStore } from "@/stores/userStore";
+
+const userState = userStore();
 
 const pixQrCode = shallowRef("");
 const qrcode = useQRCode(pixQrCode);
@@ -79,21 +71,35 @@ const getFormatTime = (dateStr: string) => {
   return dayjs(dateStr).format("HH:mm");
 };
 
+const brlAmount = computed(() => {
+  const localBRLAmount = userState.userData?.brl || 0;
+
+  return localBRLAmount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,");
+});
+
 const generateQRCode = async () => {
   qrcodeLoading.value = true;
+  pixQrCode.value = userState?.user?.pix_qr_code || "";
+  qrcode.value = pixQrCode.value;
+
   await new Promise<void>(async (resolve) => {
     setTimeout(() => {
       resolve();
     }, 3000);
   });
 
-  pixQrCode.value =
-    "00020126360014BR.GOV.BCB.PIX0136+55119999999952040000530398654041000062070503***6304B14F";
-  qrcode.value = pixQrCode.value;
   qrcodeLoading.value = false;
 };
 
 const { t } = useI18n();
+
+const { copy, isSupported } = useClipboard();
+
+const copyQrToClipboard = () => {
+  if (isSupported && pixQrCode.value) {
+    copy(pixQrCode.value);
+  }
+};
 </script>
 
 <template>
@@ -199,7 +205,7 @@ const { t } = useI18n();
                       t("deposit.balance")
                     }}</span>
 
-                    <span class="text-sm">R$ 1200,00 BRL</span>
+                    <span class="text-sm">R$ {{ brlAmount }}</span>
                   </div>
                 </div>
 
@@ -214,7 +220,11 @@ const { t } = useI18n();
                     {{ pixQrCode }}
                   </div>
 
-                  <Button size="small" class="w-full">
+                  <Button
+                    size="small"
+                    class="w-full"
+                    @click="copyQrToClipboard"
+                  >
                     <div class="flex items-center gap-4">
                       <span class="font-semibold">{{
                         t("deposit.copy_qr")

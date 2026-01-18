@@ -21,23 +21,24 @@ const router = useRouter();
 const userState = userStore();
 const hiddenValues = ref(false);
 
-const amountUSDT = ref(3000);
-const amountBRL = ref(3000);
-
 const amoountUSDTShown = computed(() => {
+  const usdtAmount = userState.userData?.usdt || 0;
+
   if (hiddenValues.value) {
     return "••••••";
   }
 
-  return `${amountUSDT.value.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}`;
+  return `${usdtAmount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}`;
 });
 
 const amoountBRLShown = computed(() => {
+  const brlAmount = userState.userData?.brl || 0;
+
   if (hiddenValues.value) {
     return "••••••";
   }
 
-  return `${amountBRL.value.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}`;
+  return `${brlAmount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}`;
 });
 
 const logout = async () => {
@@ -187,9 +188,9 @@ const goTo = (routeName: string) => {
         </div> -->
 
         <div class="flex flex-col ml-4 justify-end">
-          <span class="text-sm text-white font-semibold text-right"
-            >AMERICA ASSET LLC</span
-          >
+          <span class="text-sm text-white font-semibold text-right">{{
+            userState.userData?.name.toLocaleUpperCase()
+          }}</span>
           <div class="flex items-center justify-end gap-1">
             <span class="text-xs text-green-500">R$ {{ amoountBRLShown }}</span>
             <span>|</span>

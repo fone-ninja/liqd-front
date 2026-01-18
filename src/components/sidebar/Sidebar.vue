@@ -82,7 +82,8 @@ const { t } = useI18n();
             <PhCoins :size="16" weight="fill" class="item-icon" />
             <span class="item-text">{{ t("sidebar.convert") }}</span>
           </li>
-          <li
+          <!-- TODO: voltar quando o back estiver pronto -->
+          <!-- <li
             :class="[
               'flex items-center gap-2',
               { active: isSelected('withdraw') },
@@ -91,7 +92,7 @@ const { t } = useI18n();
           >
             <PhHandWithdraw :size="16" weight="fill" class="item-icon" />
             <span class="item-text">{{ t("sidebar.withdraw") }}</span>
-          </li>
+          </li> -->
         </ul>
       </div>
     </div>

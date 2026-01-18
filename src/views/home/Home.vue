@@ -1,21 +1,22 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, nextTick } from "vue";
+import { ref, computed, onMounted, onUnmounted, nextTick } from "vue";
 import { useI18n } from "vue-i18n";
 import MovementTag from "@/components/movements/MovementTag.vue";
 import MovementCrypto from "@/components/movements/MovementCrypto.vue";
 import MovementModal from "@/components/movements/modal/MovementModal.vue";
+import { userStore } from "@/stores/userStore";
 import {
-  PhBook,
-  PhHouse,
   PhEye,
   PhEyeSlash,
   PhArrowsClockwise,
   PhArrowUp,
-  PhArrowDown,
   PhFile,
-  PhHandWithdraw,
 } from "@phosphor-icons/vue";
 import dayjs from "dayjs";
+import { useToast } from "primevue/usetoast";
+
+const { t } = useI18n();
+const toast = useToast();
 
 const products = [
   {
@@ -70,6 +71,7 @@ const hiddenUSD = ref(false);
 const spinnerProgress = ref(0);
 const valueRef = ref<HTMLElement | null>(null);
 const barWidth = ref("130px");
+const userState = userStore();
 
 const quoteValue = ref<number>(252222.0);
 const formatCurrency = (value: number) => {
@@ -139,7 +141,38 @@ const getFormatTime = (dateStr: string) => {
   return dayjs(dateStr).format("HH:mm");
 };
 
-const { t } = useI18n();
+const amoountUSDTShown = computed(() => {
+  const usdtAmount = userState.userData?.usdt || 0;
+
+  if (hiddenUSD.value) {
+    return "••••••";
+  }
+
+  return `${usdtAmount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}`;
+});
+
+const amoountBRLShown = computed(() => {
+  const brlAmount = userState.userData?.brl || 0;
+
+  if (hiddenBRL.value) {
+    return "••••••";
+  }
+
+  return `${brlAmount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}`;
+});
+
+const updateAmount = async () => {
+  try {
+    await userState.getUser();
+  } catch (error) {
+    toast.add({
+      severity: "warn",
+      summary: "Erro ao obter informações",
+      detail: "Não foi possível obter as informações de saldo.",
+      life: 5000,
+    });
+  }
+};
 
 onMounted(() => {
   updateBarWidth();
@@ -190,13 +223,12 @@ onUnmounted(() => {
                 :size="16"
                 weight="fill"
                 class="text-white cursor-pointer"
+                @click="updateAmount"
               />
             </div>
           </div>
           <div class="flex mt-4">
-            <span class="text-2xl text-white">{{
-              hiddenBRL ? "••••••" : "R$ 5,00"
-            }}</span>
+            <span class="text-2xl text-white">R$ {{ amoountBRLShown }}</span>
           </div>
         </div>
 
@@ -225,13 +257,12 @@ onUnmounted(() => {
                 :size="16"
                 weight="fill"
                 class="text-white cursor-pointer"
+                @click="updateAmount"
               />
             </div>
           </div>
           <div class="flex mt-4">
-            <span class="text-2xl text-white">{{
-              hiddenUSD ? "••••••" : "R$ 5,00"
-            }}</span>
+            <span class="text-2xl text-white">$ {{ amoountUSDTShown }}</span>
           </div>
         </div>
       </div>

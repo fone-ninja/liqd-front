@@ -22,12 +22,8 @@ export const userStore = defineStore("user", {
     },
     async getUser() {
       try {
-        const userId = this.getUserIdByToken();
-        const data = await userService.getUser();
-        const user: User = data.data_user_list.data.find(
-          (el: User) => el.id === userId
-        );
-        this.setUser(user);
+        const { data } = await userService.getUser();
+        this.setUser(data);
       } catch (error) {
         throw error;
       }

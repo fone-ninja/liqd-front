@@ -1,38 +1,66 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useI18n } from "vue-i18n";
 import MovementTag from "@/components/movements/MovementTag.vue";
 import MovementCrypto from "@/components/movements/MovementCrypto.vue";
 import ConvertCrypto from "@/components/convert/ConvertCrypto.vue";
 import MovementModal from "@/components/movements/modal/MovementModal.vue";
 import {
-  PhBook,
-  PhHouse,
   PhEye,
   PhEyeSlash,
   PhArrowsClockwise,
-  PhArrowUp,
-  PhArrowDown,
-  PhArrowRight,
-  PhHandWithdraw,
   PhArrowsHorizontal,
   PhArrowsDownUp,
   PhFile,
 } from "@phosphor-icons/vue";
 import dayjs from "dayjs";
-import { useQRCode } from "@vueuse/integrations/useQRCode";
+import { userStore } from "@/stores/userStore";
+import { useToast } from "primevue/usetoast";
 
+const { t } = useI18n();
+const toast = useToast();
 const showMovementModal = ref(false);
 const movement = ref(null);
 
 const hiddenFrom = ref(false);
 const hiddenTo = ref(false);
 
-const qrcode = useQRCode("text-to-encode");
+const userState = userStore();
 
-const pixQrCode = ref(
-  "00020126360014BR.GOV.BCB.PIX0136+55119999999952040000530398654041000062070503***6304B14F"
-);
+const brlBalance = ref<number | null>(null);
+
+const showMinBalanceConvert = () => {
+  toast.add({
+    severity: "warn",
+    summary: "Valor insuficiente",
+    detail: "O valor mínimo para a conversão é de R$25,00",
+    life: 5000,
+  });
+};
+
+const amoountBRL = computed(() => {
+  const brlAmount = userState.userData?.brl || 0;
+
+  return `${brlAmount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}`;
+});
+
+const amoountBRLShown = computed(() => {
+  if (hiddenFrom.value) {
+    return "••••••";
+  }
+
+  return `${amoountBRL.value}`;
+});
+
+const amoountUSDTShown = computed(() => {
+  const usdtAmount = userState.userData?.usdt || 0;
+
+  if (hiddenTo.value) {
+    return "••••••";
+  }
+
+  return `${usdtAmount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}`;
+});
 
 const products = [
   {
@@ -89,7 +117,31 @@ const getFormatTime = (dateStr: string) => {
   return dayjs(dateStr).format("HH:mm");
 };
 
-const { t } = useI18n();
+const changeAmountBalanceToMax = () => {
+  brlBalance.value = userState.userData?.brl || 0;
+};
+
+const updateAmount = async () => {
+  try {
+    await userState.getUser();
+  } catch (error) {
+    toast.add({
+      severity: "warn",
+      summary: "Erro ao obter informações",
+      detail: "Não foi possível obter as informações de saldo.",
+      life: 5000,
+    });
+  }
+};
+
+const convertBalance = () => {
+  if ((brlBalance.value || 0) < 25) {
+    showMinBalanceConvert();
+    return;
+  }
+
+  // Logic to convert balance goes here
+};
 </script>
 
 <template>
@@ -125,13 +177,16 @@ const { t } = useI18n();
                 class="text-white cursor-pointer"
                 @click="hiddenFrom = !hiddenFrom"
               />
-              <PhArrowsClockwise :size="16" weight="fill" class="text-white" />
+              <PhArrowsClockwise
+                :size="16"
+                weight="fill"
+                class="text-white cursor-pointer"
+                @click="updateAmount"
+              />
             </div>
           </div>
           <div class="flex mt-4">
-            <span class="text-2xl text-white">{{
-              hiddenFrom ? "••••••" : "R$ 5,00"
-            }}</span>
+            <span class="text-2xl text-white">R$ {{ amoountBRLShown }}</span>
           </div>
         </div>
 
@@ -156,13 +211,16 @@ const { t } = useI18n();
                 class="text-white cursor-pointer"
                 @click="hiddenTo = !hiddenTo"
               />
-              <PhArrowsClockwise :size="16" weight="fill" class="text-white" />
+              <PhArrowsClockwise
+                :size="16"
+                weight="fill"
+                class="text-white cursor-pointer"
+                @click="updateAmount"
+              />
             </div>
           </div>
           <div class="flex mt-4">
-            <span class="text-2xl text-white">{{
-              hiddenTo ? "••••••" : "R$ 5,00"
-            }}</span>
+            <span class="text-2xl text-white">$ {{ amoountUSDTShown }}</span>
           </div>
         </div>
       </div>
@@ -174,6 +232,7 @@ const { t } = useI18n();
           >
             <div class="order-2 lg:w-1/2 lg:order-none">
               <InputNumber
+                v-model="brlBalance"
                 placeholder="Price"
                 class="flex-1 lg:flex-initial lg:w-full"
                 :pt="{
@@ -192,8 +251,11 @@ const { t } = useI18n();
           <div class="flex flex-col">
             <p>{{ t("convert.available") }}</p>
             <div class="flex justify-between">
-              <span class="text-white">BRL 0,00</span>
-              <div class="cursor-pointer text-[#E94F06]">
+              <span class="text-white">BRL {{ amoountBRL }}</span>
+              <div
+                class="cursor-pointer text-[#E94F06]"
+                @click="changeAmountBalanceToMax"
+              >
                 {{ t("common.max") }}
               </div>
             </div>
@@ -208,7 +270,7 @@ const { t } = useI18n();
               size="small"
               :label="t('common.converter_button')"
               class="mt-4 min-w-[130px] w-min mb-1 hidden! lg:block!"
-              @click="goToSignin"
+              @click="convertBalance"
             />
           </div>
         </div>
@@ -220,6 +282,7 @@ const { t } = useI18n();
             <div class="order-2 lg:w-1/2 lg:order-none">
               <InputNumber
                 placeholder="Price"
+                disabled
                 class="flex-1 lg:flex-initial lg:w-full"
                 :pt="{
                   root: { class: 'min-w-[100px]!' },
@@ -236,6 +299,11 @@ const { t } = useI18n();
         <div class="flex flex-col gap-1">
           <div class="flex justify-between">
             <span>{{ t("convert.value_to_receive") }}</span>
+            <span>$ 0,00</span>
+          </div>
+
+          <div class="flex justify-between">
+            <span>Novo saldo da carteira</span>
             <span>$ 0,00</span>
           </div>
 
