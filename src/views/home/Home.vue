@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, nextTick } from "vue";
+import { useUiStore } from "@/stores/uiStore";
 import { useI18n } from "vue-i18n";
 import MovementTag from "@/components/movements/MovementTag.vue";
 import MovementCrypto from "@/components/movements/MovementCrypto.vue";
@@ -71,6 +72,7 @@ const hiddenBRL = ref(false);
 const hiddenUSD = ref(false);
 
 const spinnerProgress = ref(0);
+const uiStore = useUiStore();
 const valueRef = ref<HTMLElement | null>(null);
 const barWidth = ref("130px");
 const userState = userStore();
@@ -79,7 +81,6 @@ const quoteState = quoteStore();
 const quoteValue = ref<number>(252222.0);
 
 let spinnerInterval: ReturnType<typeof setInterval> | null = null;
-let requestInterval: ReturnType<typeof setInterval> | null = null;
 
 const updateBarWidth = () => {
   if (valueRef.value) {
@@ -87,46 +88,20 @@ const updateBarWidth = () => {
   }
 };
 
-const fetchQuote = async () => {
-  return new Promise<void>((resolve) => {
-    setTimeout(async () => {
-      const mock = (Math.random() * (50000 - 10) + 10).toFixed(2);
-      const mockQuote = Number(mock);
-
-      quoteValue.value = mockQuote;
-
-      await nextTick();
-      updateBarWidth();
-      resolve();
-    }, 500);
-  });
-};
-
 const startSpinner = () => {
   if (spinnerInterval) clearInterval(spinnerInterval);
-  if (requestInterval) clearInterval(requestInterval);
 
   spinnerProgress.value = 0;
-  let elapsed = 0;
-
   spinnerInterval = setInterval(() => {
-    elapsed += 50;
-    spinnerProgress.value = (elapsed % 12000) / 12000;
+    spinnerProgress.value =
+      1 - uiStore.pollingTimeLeft / uiStore.pollingDuration;
   }, 50);
-
-  requestInterval = setInterval(() => {
-    fetchQuote();
-  }, 12000);
 };
 
 const stopSpinner = () => {
   if (spinnerInterval) {
     clearInterval(spinnerInterval);
     spinnerInterval = null;
-  }
-  if (requestInterval) {
-    clearInterval(requestInterval);
-    requestInterval = null;
   }
 };
 

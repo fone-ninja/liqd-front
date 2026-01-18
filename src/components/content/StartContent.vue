@@ -3,11 +3,16 @@ import Sidebar from "@/components/sidebar/Sidebar.vue";
 import Tabbar from "@/components/tabbar/Tabbar.vue";
 import Header from "@/components/header/Header.vue";
 import { quoteStore } from "@/stores/quoteStore";
-import { onMounted, onUnmounted } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
+import { useUiStore } from "@/stores/uiStore";
 
 const quoteData = quoteStore();
+const uiStore = useUiStore();
 
 let pollingInterval: ReturnType<typeof setInterval> | null = null;
+let timerInterval: ReturnType<typeof setInterval> | null = null;
+
+const timeLeft = ref(uiStore.pollingDuration);
 
 const createQuote = async () => {
   try {
@@ -33,15 +38,31 @@ const getQuote = async () => {
 
 onMounted(() => {
   createQuote();
+  timeLeft.value = uiStore.pollingDuration;
+  uiStore.setPollingTimeLeft(timeLeft.value);
+
   pollingInterval = setInterval(() => {
     getQuote();
-  }, 12000);
+    timeLeft.value = uiStore.pollingDuration;
+    uiStore.setPollingTimeLeft(timeLeft.value);
+  }, uiStore.pollingDuration * 1000);
+
+  timerInterval = setInterval(() => {
+    if (timeLeft.value > 0) {
+      timeLeft.value--;
+      uiStore.setPollingTimeLeft(timeLeft.value);
+    }
+  }, 1000);
 });
 
 onUnmounted(() => {
   if (pollingInterval) {
     clearInterval(pollingInterval);
     pollingInterval = null;
+  }
+  if (timerInterval) {
+    clearInterval(timerInterval);
+    timerInterval = null;
   }
 });
 </script>
