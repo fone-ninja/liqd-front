@@ -5,6 +5,7 @@ import MovementTag from "@/components/movements/MovementTag.vue";
 import MovementCrypto from "@/components/movements/MovementCrypto.vue";
 import MovementModal from "@/components/movements/modal/MovementModal.vue";
 import { userStore } from "@/stores/userStore";
+import { quoteStore } from "@/stores/quoteStore";
 import {
   PhEye,
   PhEyeSlash,
@@ -14,6 +15,7 @@ import {
 } from "@phosphor-icons/vue";
 import dayjs from "dayjs";
 import { useToast } from "primevue/usetoast";
+import { formatCurrency } from "@/utils/currency";
 
 const { t } = useI18n();
 const toast = useToast();
@@ -72,14 +74,9 @@ const spinnerProgress = ref(0);
 const valueRef = ref<HTMLElement | null>(null);
 const barWidth = ref("130px");
 const userState = userStore();
+const quoteState = quoteStore();
 
 const quoteValue = ref<number>(252222.0);
-const formatCurrency = (value: number) => {
-  return `R$ ${Number(value).toLocaleString("pt-BR", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })}`;
-};
 
 let spinnerInterval: ReturnType<typeof setInterval> | null = null;
 let requestInterval: ReturnType<typeof setInterval> | null = null;
@@ -288,9 +285,24 @@ onUnmounted(() => {
 
             <div class="flex flex-col gap-2">
               <div>
-                <span ref="valueRef" class="text-3xl text-green-500"
-                  ><b>{{ formatCurrency(quoteValue) }}</b></span
-                >
+                <div>
+                  <span
+                    ref="valueRef"
+                    class="text-3xl text-green-500"
+                    v-if="+(quoteState.quoteData?.offer_price || 0) !== 0"
+                    ><b>{{
+                      formatCurrency({
+                        value: Number(quoteState.quoteData?.offer_price || 0),
+                      })
+                    }}</b></span
+                  >
+                  <Skeleton
+                    v-else
+                    height="2rem"
+                    :style="{ width: barWidth }"
+                    class="mb-3"
+                  ></Skeleton>
+                </div>
                 <div
                   class="bg-gray-700 rounded-full h-2 overflow-hidden mt-2"
                   :style="{ width: barWidth }"

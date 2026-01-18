@@ -15,7 +15,10 @@ import {
 } from "@phosphor-icons/vue";
 import dayjs from "dayjs";
 import { userStore } from "@/stores/userStore";
+import { quoteStore } from "@/stores/quoteStore";
 import { useToast } from "primevue/usetoast";
+import type { InputNumberInputEvent } from "primevue/inputnumber";
+import { formatCurrency } from "@/utils/currency";
 
 const { t } = useI18n();
 const toast = useToast();
@@ -26,8 +29,10 @@ const hiddenFrom = ref(false);
 const hiddenTo = ref(false);
 
 const userState = userStore();
+const quoteState = quoteStore();
 
 const brlBalance = ref<number | null>(null);
+const usdtBalance = ref<number | null>(null);
 
 const showMinBalanceConvert = () => {
   toast.add({
@@ -119,6 +124,7 @@ const getFormatTime = (dateStr: string) => {
 
 const changeAmountBalanceToMax = () => {
   brlBalance.value = userState.userData?.brl || 0;
+  onChangeBalance({ value: brlBalance.value } as InputNumberInputEvent);
 };
 
 const updateAmount = async () => {
@@ -142,6 +148,21 @@ const convertBalance = () => {
 
   // Logic to convert balance goes here
 };
+
+const onChangeBalance = (event: InputNumberInputEvent) => {
+  const inputValue = Number(event.value || 0);
+  const dolarQuote = Number(quoteState.quoteData?.offer_price || 0);
+  usdtBalance.value = inputValue / dolarQuote;
+};
+
+const resultConvertedAmount = computed(() => {
+  return usdtBalance.value || 0;
+});
+
+const newWalletBalanceUSDT = computed(() => {
+  const currentUSDT = userState.userData?.usdt || 0;
+  return currentUSDT + (usdtBalance.value || 0);
+});
 </script>
 
 <template>
@@ -186,7 +207,9 @@ const convertBalance = () => {
             </div>
           </div>
           <div class="flex mt-4">
-            <span class="text-2xl text-white">R$ {{ amoountBRLShown }}</span>
+            <span class="text-2xl text-white">
+              {{ formatCurrency({ value: Number(amoountBRLShown) }) }}</span
+            >
           </div>
         </div>
 
@@ -220,7 +243,13 @@ const convertBalance = () => {
             </div>
           </div>
           <div class="flex mt-4">
-            <span class="text-2xl text-white">$ {{ amoountUSDTShown }}</span>
+            <span class="text-2xl text-white">{{
+              formatCurrency({
+                value: Number(amoountUSDTShown),
+                localeString: "en-US",
+                symbol: "$",
+              })
+            }}</span>
           </div>
         </div>
       </div>
@@ -232,7 +261,10 @@ const convertBalance = () => {
           >
             <div class="order-2 lg:w-1/2 lg:order-none">
               <InputNumber
+                :minFractionDigits="2"
+                :maxFractionDigits="4"
                 v-model="brlBalance"
+                @input="(e) => onChangeBalance(e)"
                 placeholder="Price"
                 class="flex-1 lg:flex-initial lg:w-full"
                 :pt="{
@@ -251,7 +283,11 @@ const convertBalance = () => {
           <div class="flex flex-col">
             <p>{{ t("convert.available") }}</p>
             <div class="flex justify-between">
-              <span class="text-white">BRL {{ amoountBRL }}</span>
+              <span class="text-white">
+                {{
+                  formatCurrency({ value: Number(amoountBRL), symbol: "BRL" })
+                }}</span
+              >
               <div
                 class="cursor-pointer text-[#E94F06]"
                 @click="changeAmountBalanceToMax"
@@ -281,6 +317,9 @@ const convertBalance = () => {
           >
             <div class="order-2 lg:w-1/2 lg:order-none">
               <InputNumber
+                :minFractionDigits="2"
+                :maxFractionDigits="4"
+                v-model="usdtBalance"
                 placeholder="Price"
                 disabled
                 class="flex-1 lg:flex-initial lg:w-full"
@@ -299,17 +338,37 @@ const convertBalance = () => {
         <div class="flex flex-col gap-1">
           <div class="flex justify-between">
             <span>{{ t("convert.value_to_receive") }}</span>
-            <span>$ 0,00</span>
+            <span>{{
+              formatCurrency({
+                value: resultConvertedAmount,
+                localeString: "en-US",
+                symbol: "$",
+              })
+            }}</span>
           </div>
 
           <div class="flex justify-between">
             <span>Novo saldo da carteira</span>
-            <span>$ 0,00</span>
+            <span>
+              {{
+                formatCurrency({
+                  value: newWalletBalanceUSDT,
+                  localeString: "en-US",
+                  symbol: "$",
+                })
+              }}</span
+            >
           </div>
 
           <div class="flex justify-between">
             <span>{{ t("convert.usdt_buy_quote") }}</span>
-            <span>R$ 50,00</span>
+            <span>
+              {{
+                formatCurrency({
+                  value: Number(quoteState?.quoteData?.offer_price || 0),
+                })
+              }}</span
+            >
           </div>
         </div>
       </div>
@@ -322,7 +381,6 @@ const convertBalance = () => {
         size="small"
         :label="t('common.converter_button')"
         class="mt-4 min-w-[130px] w-min mb-1"
-        @click="goToSignin"
       />
     </div>
 

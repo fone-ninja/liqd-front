@@ -2,6 +2,48 @@
 import Sidebar from "@/components/sidebar/Sidebar.vue";
 import Tabbar from "@/components/tabbar/Tabbar.vue";
 import Header from "@/components/header/Header.vue";
+import { quoteStore } from "@/stores/quoteStore";
+import { onMounted, onUnmounted } from "vue";
+
+const quoteData = quoteStore();
+
+let pollingInterval: ReturnType<typeof setInterval> | null = null;
+
+const createQuote = async () => {
+  try {
+    const data = await quoteData.createQuote({
+      base: "usdt",
+      quote: "brz",
+      amount: 1,
+    });
+    console.log(data);
+  } catch (error) {
+    console.error("Error fetching quote:", error);
+  }
+};
+
+const getQuote = async () => {
+  try {
+    const data = await quoteData.getQuote();
+    console.log(data);
+  } catch (error) {
+    console.error("Error fetching quote:", error);
+  }
+};
+
+onMounted(() => {
+  createQuote();
+  pollingInterval = setInterval(() => {
+    getQuote();
+  }, 12000);
+});
+
+onUnmounted(() => {
+  if (pollingInterval) {
+    clearInterval(pollingInterval);
+    pollingInterval = null;
+  }
+});
 </script>
 
 <template>
