@@ -104,7 +104,7 @@
     "completed": "Concluído"
   },
   "modal": {
-    "withdraw": {
+    "withdrawal": {
       "title": "Saque",
       "status_completed": "Concluída"
     },
@@ -112,7 +112,7 @@
       "title": "Depósito",
       "status_completed": "Concluída"
     },
-    "convert": {
+    "trade": {
       "title": "Conversão",
       "status_completed": "Concluída"
     },

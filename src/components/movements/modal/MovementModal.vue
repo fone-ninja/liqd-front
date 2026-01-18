@@ -19,29 +19,17 @@ defineProps({
 const model = defineModel({ default: false });
 
 const MODAL_CONTENT = {
-  withdraw: {
+  withdrawal: {
     contentComponent: MovementWithdrawContent,
-    title: "modal.withdraw.title",
+    title: "modal.withdrawal.title",
   },
-  convert: {
+  trade: {
     contentComponent: MovementConvertContent,
-    title: "modal.convert.title",
+    title: "modal.trade.title",
   },
   deposit: {
     contentComponent: MovementDepositContent,
     title: "modal.deposit.title",
-  },
-};
-const CRYPTO = {
-  usdt: {
-    name: "Tether",
-    symbol: "USDT",
-    image: "https://app.tcr.finance/img/coins/tether.svg",
-  },
-  brl: {
-    name: "Brazilian Real",
-    symbol: "BRL",
-    image: "https://app.tcr.finance/img/home/flag_brazil.svg",
   },
 };
 </script>
@@ -69,19 +57,24 @@ const CRYPTO = {
         </div>
         <div class="flex flex-col gap-1">
           <span class="text-lg font-semibold">{{
-            t(MODAL_CONTENT[movement.type].title)
+            t(MODAL_CONTENT[movement.movable_type].title)
           }}</span>
           <div class="flex items-center gap-2 text-green-400 text-sm">
             <div class="w-2 h-2 rounded bg-green-400"></div>
-            {{ t("modal." + movement.type + ".status_completed") }}
+            {{ t("modal." + movement.movable_type + ".status_completed") }}
           </div>
         </div>
       </div>
     </template>
     <template #default>
-      <component :is="MODAL_CONTENT[movement.type].contentComponent" />
+      <component
+        :is="MODAL_CONTENT[movement.movable_type].contentComponent"
+        :movement
+      />
     </template>
-    <template #footer>
+
+    <!-- TODO: Adicionar quando o back tiver suporte -->
+    <!-- <template #footer>
       <Button
         fluid
         :label="t('modal.shared.download_receipt')"
@@ -95,7 +88,7 @@ const CRYPTO = {
           }}</span>
         </div>
       </Button>
-    </template>
+    </template> -->
   </Dialog>
 </template>
 

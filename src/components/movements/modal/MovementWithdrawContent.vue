@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { PhCopy } from "@phosphor-icons/vue";
 import { useI18n } from "vue-i18n";
+import { formatCurrency } from "@/utils/currency";
+import dayjs from "dayjs";
 
 const { t } = useI18n();
 
@@ -15,6 +17,23 @@ const CRYPTO = {
     symbol: "BRL",
     image: "https://app.tcr.finance/img/home/flag_brazil.svg",
   },
+  trx: {
+    name: "Tron",
+    symbol: "TRX",
+    image: "https://app.tcr.finance/img/coins/tron.svg",
+  },
+};
+
+defineProps({
+  movement: {
+    type: [Object],
+    default: () => {},
+    required: true,
+  },
+});
+
+const getFormatedDate = (dateStr: string) => {
+  return dayjs(dateStr).format("DD/MM/YYYY HH:mm").toLowerCase();
 };
 
 const viewReceipt = () => {
@@ -29,22 +48,39 @@ const viewReceipt = () => {
   <div class="mt-6">
     <div class="flex items-center justify-center gap-2">
       <img :src="CRYPTO.usdt.image" :alt="crypto" class="w-8 h-8" />
-      <span class="text-2xl text-white font-bold">-3,6640,00 USDT</span>
+      <span class="text-2xl text-white font-bold"
+        >-
+        {{
+          formatCurrency({
+            value: Number(movement.amount_usdt || 0),
+            removeSymbol: true,
+          })
+        }}
+        USDT</span
+      >
     </div>
 
     <div class="mt-8">
       <ul>
         <li>
           <span>{{ t("modal.shared.transaction_id") }}</span>
-          <span>#3243532</span>
+          <span>#{{ movement.id }}</span>
         </li>
         <li>
           <span>{{ t("modal.shared.date") }}</span>
-          <span>25/08/2025 16:07</span>
+          <span>{{ getFormatedDate(movement.created_at) }}</span>
         </li>
         <li>
           <span>{{ t("modal.shared.amount") }}</span>
-          <span>3,640.00 USDT</span>
+          <span
+            >{{
+              formatCurrency({
+                value: Number(movement.amount_usdt || 0),
+                removeSymbol: true,
+              })
+            }}
+            USDT</span
+          >
         </li>
         <li>
           <span>{{ t("modal.shared.hash") }}</span>
@@ -68,7 +104,7 @@ const viewReceipt = () => {
         </li>
         <li>
           <span>{{ t("modal.shared.network") }}</span>
-          <span>Polygon</span>
+          <span>Tron</span>
         </li>
       </ul>
     </div>

@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { PhArrowRight } from "@phosphor-icons/vue";
 import { useI18n } from "vue-i18n";
+import { formatCurrency } from "@/utils/currency";
+import dayjs from "dayjs";
 
 const { t } = useI18n();
 
@@ -15,6 +17,23 @@ const CRYPTO = {
     symbol: "BRL",
     image: "https://app.tcr.finance/img/home/flag_brazil.svg",
   },
+  trx: {
+    name: "Tron",
+    symbol: "TRX",
+    image: "https://app.tcr.finance/img/coins/tron.svg",
+  },
+};
+
+defineProps({
+  movement: {
+    type: [Object],
+    default: () => {},
+    required: true,
+  },
+});
+
+const getFormatedDate = (dateStr: string) => {
+  return dayjs(dateStr).format("DD/MM/YYYY HH:mm").toLowerCase();
 };
 </script>
 
@@ -26,7 +45,14 @@ const CRYPTO = {
           <img :src="CRYPTO.usdt.image" :alt="crypto" class="w-8 h-8" />
           <span class="text-xl font-semibold"> USDT</span>
         </div>
-        <span class="text-xl text-white font-bold mb-1">-3,6640,00</span>
+        <span class="text-xl text-white font-bold mb-1"
+          >-{{
+            formatCurrency({
+              value: Number(movement.amount_usdt || 0),
+              removeSymbol: true,
+            })
+          }}</span
+        >
         <small class="text-surface-400">Tether</small>
       </div>
 
@@ -39,7 +65,14 @@ const CRYPTO = {
           <img :src="CRYPTO.brl.image" :alt="crypto" class="w-8 h-8" />
           <span class="text-xl font-semibold"> BRL</span>
         </div>
-        <span class="text-xl text-white font-bold mb-1">-3,6640,00</span>
+        <span class="text-xl text-white font-bold mb-1"
+          >+{{
+            formatCurrency({
+              value: Number(movement.amount_brl || 0),
+              removeSymbol: true,
+            })
+          }}</span
+        >
         <small class="text-surface-400">Brazilian Real</small>
       </div>
     </div>
@@ -48,15 +81,19 @@ const CRYPTO = {
       <ul>
         <li>
           <span>{{ t("modal.shared.transaction_id") }}</span>
-          <span>#3243532</span>
+          <span>#{{ movement.id }}</span>
         </li>
         <li>
           <span>{{ t("modal.shared.date") }}</span>
-          <span>25/08/2025 16:07</span>
+          <span>{{ getFormatedDate(movement.created_at) }}</span>
         </li>
         <li>
           <span>{{ t("modal.shared.usd_quote") }}</span>
-          <span>R$ 3,640.00</span>
+          <span>{{
+            formatCurrency({
+              value: Number(movement.usdt_price_brl || 0),
+            })
+          }}</span>
         </li>
         <li>
           <span>{{ t("modal.shared.operation") }}</span>
