@@ -71,53 +71,6 @@ const amoountUSDTShown = computed(() => {
   return `${usdtAmount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}`;
 });
 
-const products = [
-  {
-    id: "1000",
-    code: "f230fh0g3",
-    name: "Bamboo Watch",
-    description: "Product Description",
-    price: 653333.12,
-    category: "Accessories",
-    quantity: 24,
-    inventoryStatus: "INSTOCK",
-    type: "convert",
-    date: "2018-04-04T16:00:00.000Z",
-    cryptoFrom: "brl",
-    cryptoTo: "usdt",
-  },
-  {
-    id: "1001",
-    code: "nvklal433",
-    name: "Black Watch",
-    description: "Product Description",
-    price: 72,
-    category: "Accessories",
-    quantity: 61,
-    inventoryStatus: "INSTOCK",
-    rating: 4,
-    type: "convert",
-    date: "2018-04-04T16:00:00.000Z",
-    cryptoFrom: "brl",
-    cryptoTo: "usdt",
-  },
-  {
-    id: "1001",
-    code: "nvklal433",
-    name: "Black Watch",
-    description: "Product Description",
-    price: 72,
-    category: "Accessories",
-    quantity: 61,
-    inventoryStatus: "INSTOCK",
-    rating: 4,
-    type: "convert",
-    date: "2018-04-04T16:00:00.000Z",
-    cryptoFrom: "brl",
-    cryptoTo: "usdt",
-  },
-];
-
 const getFormatDate = (dateStr: string) => {
   return dayjs(dateStr).format("DD MMM. YYYY").toLowerCase();
 };
@@ -279,82 +232,89 @@ onMounted(() => {
         </div>
       </div>
 
-      <div class="flex flex-col lg:flex-row gap-4">
-        <div class="bg-[#111111] p-6 rounded-lg flex-1">
-          <div
-            class="flex flex-col lg:flex-row gap-4 border-b border-gray-400 pb-8 mb-4 justify-between items-start"
-          >
-            <div class="order-2 lg:w-1/2 lg:order-none">
-              <InputNumber
-                :minFractionDigits="2"
-                :maxFractionDigits="4"
-                v-model="brlBalance"
-                @input="(e) => onChangeBalance(e)"
-                placeholder="Price"
-                class="flex-1 lg:flex-initial lg:w-full"
-                :pt="{
-                  root: { class: 'min-w-[100px]!' },
-                  pcinputtext: { root: { class: 'min-w-[100px]!' } },
-                }"
-              />
-              <p class="mt-1 text-xs">
-                {{ t("convert.min_value", { value: "R$25,00" }) }}
-              </p>
+      <div>
+        <div class="flex flex-col lg:flex-row gap-4">
+          <div class="bg-[#111111] p-6 rounded-lg flex-1">
+            <div
+              class="flex flex-col lg:flex-row gap-4 border-b border-gray-400 pb-8 mb-4 justify-between items-start"
+            >
+              <div class="order-2 lg:w-1/2 lg:order-none">
+                <InputNumber
+                  :minFractionDigits="2"
+                  :maxFractionDigits="4"
+                  v-model="brlBalance"
+                  @input="(e) => onChangeBalance(e)"
+                  placeholder="Price"
+                  class="flex-1 lg:flex-initial lg:w-full"
+                  :pt="{
+                    root: { class: 'min-w-[100px]!' },
+                    pcinputtext: { root: { class: 'min-w-[100px]!' } },
+                  }"
+                />
+                <p class="mt-1 text-xs">
+                  {{ t("convert.min_value", { value: "R$25,00" }) }}
+                </p>
+              </div>
+
+              <MovementCrypto crypto="brl" class="order-1 lg:order-none" />
             </div>
 
-            <MovementCrypto crypto="brl" class="order-1 lg:order-none" />
-          </div>
-
-          <div class="flex flex-col">
-            <p>{{ t("convert.available") }}</p>
-            <div class="flex justify-between">
-              <span class="text-white">
-                {{
-                  formatCurrency({ value: Number(amoountBRL), symbol: "BRL" })
-                }}</span
-              >
-              <div
-                class="cursor-pointer text-[#E94F06]"
-                @click="changeAmountBalanceToMax"
-              >
-                {{ t("common.max") }}
+            <div class="flex flex-col">
+              <p>{{ t("convert.available") }}</p>
+              <div class="flex justify-between">
+                <span class="text-white">
+                  {{
+                    formatCurrency({ value: Number(amoountBRL), symbol: "BRL" })
+                  }}</span
+                >
+                <div
+                  class="cursor-pointer text-[#E94F06]"
+                  @click="changeAmountBalanceToMax"
+                >
+                  {{ t("common.max") }}
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <div class="px-2">
-          <div class="flex flex-col items-center justify-center h-full">
-            <PhArrowsHorizontal size="32" class="text-white hidden lg:block" />
-            <PhArrowsDownUp size="32" class="text-white block lg:hidden" />
-            <Button
-              size="small"
-              :label="t('common.converter_button')"
-              class="mt-4 min-w-[130px] w-min mb-1 hidden! lg:block!"
-              @click="convertBalance"
-            />
+          <div class="px-2">
+            <div class="flex flex-col items-center justify-center h-full">
+              <PhArrowsHorizontal
+                size="32"
+                class="text-white hidden lg:block"
+              />
+              <PhArrowsDownUp size="32" class="text-white block lg:hidden" />
+            </div>
           </div>
-        </div>
 
-        <div class="bg-[#111111] p-6 rounded-lg flex-1">
-          <div
-            class="flex flex-col lg:flex-row gap-4 pb-8 mb-4 justify-between"
-          >
-            <div class="order-2 lg:w-1/2 lg:order-none">
-              <InputNumber
-                :minFractionDigits="2"
-                :maxFractionDigits="4"
-                v-model="usdtBalance"
-                placeholder="Price"
-                disabled
-                class="flex-1 lg:flex-initial lg:w-full"
-                :pt="{
-                  root: { class: 'min-w-[100px]!' },
-                  pcinputtext: { root: { class: 'min-w-[100px]!' } },
-                }"
+          <div class="bg-[#111111] p-6 rounded-lg flex-1">
+            <div class="flex flex-col justify-between h-full">
+              <div class="flex flex-col lg:flex-row gap-4 justify-between">
+                <div class="order-2 lg:w-1/2 lg:order-none">
+                  <InputNumber
+                    :minFractionDigits="2"
+                    :maxFractionDigits="4"
+                    v-model="usdtBalance"
+                    placeholder="Price"
+                    disabled
+                    class="flex-1 lg:flex-initial lg:w-full"
+                    :pt="{
+                      root: { class: 'min-w-[100px]!' },
+                      pcinputtext: { root: { class: 'min-w-[100px]!' } },
+                    }"
+                  />
+                </div>
+                <MovementCrypto crypto="usdt" class="order-1 lg:order-none" />
+              </div>
+
+              <Button
+                size="small"
+                :label="t('common.converter_button')"
+                class="min-w-[130px] w-min hidden! lg:block! self-end!"
+                :disabled="!brlBalance"
+                @click="convertBalance"
               />
             </div>
-            <MovementCrypto crypto="usdt" class="order-1 lg:order-none" />
           </div>
         </div>
       </div>

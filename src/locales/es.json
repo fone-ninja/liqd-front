@@ -67,6 +67,9 @@
     "title": "Mi Perfil",
     "member": "Miembro desde el"
   },
+  "faq": {
+    "title": "Central de ayuda"
+  },
   "convert": {
     "title": "Convertir",
     "balance_brl": "Saldo BRL",

@@ -34,6 +34,11 @@ const logout = async () => {
     console.log(error);
   }
 };
+
+const goToFAQ = async () => {
+  router.push({ name: "faq" });
+};
+
 const { t } = useI18n();
 </script>
 
@@ -99,7 +104,7 @@ const { t } = useI18n();
 
     <div class="cta-section">
       <ul class="w-full">
-        <li class="flex items-center gap-2">
+        <li class="flex items-center gap-2" @click="goToFAQ">
           <PhWhatsappLogo :size="16" weight="fill" class="item-icon" />
           <span class="item-text">{{ t("sidebar.help_center") }}</span>
         </li>

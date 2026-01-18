@@ -29,6 +29,11 @@ const routes = [
         name: "withdraw",
         component: () => import("../views/withdraw/Withdraw.vue"),
       },
+      {
+        path: "faq",
+        name: "faq",
+        component: () => import("../views/faq/Faq.vue"),
+      },
     ],
   },
 ];

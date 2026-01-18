@@ -76,6 +76,9 @@
     "title": "Meu Perfil",
     "member": "Membro desde"
   },
+  "faq": {
+    "title": "Central de ajuda"
+  },
   "common": {
     "converter_button": "Converter",
     "max": "MAX",

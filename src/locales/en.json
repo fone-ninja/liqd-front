@@ -65,7 +65,10 @@
   },
   "profile": {
     "title": "My Profile",
-    "member": "Member since"
+    "member": "Member since",
+    "faq": {
+      "title": "Help center"
+    }
   },
   "convert": {
     "title": "Convert",
