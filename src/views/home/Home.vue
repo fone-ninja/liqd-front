@@ -72,23 +72,23 @@ const getFormatTime = (dateStr: string) => {
 };
 
 const amoountUSDTShown = computed(() => {
-  const usdtAmount = userState.userData?.usdt || 0;
+  const usdtAmount = Number(userState.userData?.usdt || 0);
 
-  if (hiddenUSD.value) {
-    return "••••••";
-  }
-
-  return `${usdtAmount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}`;
+  return formatCurrency({
+    value: usdtAmount,
+    symbol: "$",
+    hiddenValues: hiddenUSD.value,
+  });
 });
 
 const amoountBRLShown = computed(() => {
-  const brlAmount = userState.userData?.brl || 0;
+  const brlAmount = Number(userState.userData?.brl || 0);
 
-  if (hiddenBRL.value) {
-    return "••••••";
-  }
-
-  return `${brlAmount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}`;
+  return formatCurrency({
+    value: brlAmount,
+    symbol: "R$",
+    hiddenValues: hiddenBRL.value,
+  });
 });
 
 const updateAmount = async () => {
@@ -175,7 +175,7 @@ onUnmounted(() => {
             </div>
           </div>
           <div class="flex mt-4">
-            <span class="text-2xl text-white">R$ {{ amoountBRLShown }}</span>
+            <span class="text-2xl text-white"> {{ amoountBRLShown }}</span>
           </div>
         </div>
 
@@ -209,7 +209,7 @@ onUnmounted(() => {
             </div>
           </div>
           <div class="flex mt-4">
-            <span class="text-2xl text-white">$ {{ amoountUSDTShown }}</span>
+            <span class="text-2xl text-white">{{ amoountUSDTShown }}</span>
           </div>
         </div>
       </div>
@@ -239,11 +239,11 @@ onUnmounted(() => {
                   <span
                     ref="valueRef"
                     class="text-3xl text-green-500"
-                    v-if="+(quoteState.quoteData?.offer_price || 0) !== 0"
+                    v-if="+(quoteState.quoteData?.price || 0) !== 0"
                     ><b
                       >{{
                         formatCurrency({
-                          value: Number(quoteState.quoteData?.offer_price || 0),
+                          value: Number(quoteState.quoteData?.price || 0),
                         })
                       }}
                     </b></span

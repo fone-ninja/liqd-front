@@ -22,7 +22,7 @@ const userState = userStore();
 const hiddenValues = ref(false);
 
 const amoountUSDTShown = computed(() => {
-  const usdtAmount = userState.userData?.usdt || 0;
+  const usdtAmount = Number(userState.userData?.usdt || 0);
 
   if (hiddenValues.value) {
     return "••••••";
@@ -32,7 +32,7 @@ const amoountUSDTShown = computed(() => {
 });
 
 const amoountBRLShown = computed(() => {
-  const brlAmount = userState.userData?.brl || 0;
+  const brlAmount = Number(userState.userData?.brl || 0);
 
   if (hiddenValues.value) {
     return "••••••";

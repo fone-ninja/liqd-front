@@ -112,9 +112,10 @@ const onSubmit = handleSubmit(async (values) => {
               <label for="ingredient1"> {{ t("auth.signin.remember") }} </label>
             </div> -->
 
-            <span class="cursor-pointer" @click="goToForgotPassword">
+            <!-- TODO: Adicionar quando a API estiver pronta -->
+            <!-- <span class="cursor-pointer" @click="goToForgotPassword">
               {{ t("auth.signin.forgot_password") }}
-            </span>
+            </span> -->
           </div>
 
           <Button

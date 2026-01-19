@@ -14,9 +14,7 @@ export const quoteStore = defineStore("quote", {
     async getQuote() {
       try {
         const data = await quoteService.getQuote();
-
-        // Adicionar quando o get estiver funcionando
-        // this.setQuote(data);
+        this.setQuote(data);
       } catch (error) {
         throw error;
       }

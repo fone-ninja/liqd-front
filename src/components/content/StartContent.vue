@@ -14,31 +14,17 @@ let timerInterval: ReturnType<typeof setInterval> | null = null;
 
 const timeLeft = ref(uiStore.pollingDuration);
 
-const createQuote = async () => {
-  try {
-    const data = await quoteData.createQuote({
-      base: "usdt",
-      quote: "brz",
-      amount: 1,
-    });
-    console.log(data);
-  } catch (error) {
-    console.error("Error fetching quote:", error);
-  }
-};
-
 const getQuote = async () => {
   try {
-    const data = await quoteData.getQuote();
-    console.log(data);
+    await quoteData.getQuote();
   } catch (error) {
     console.error("Error fetching quote:", error);
   }
 };
 
 onMounted(() => {
-  createQuote();
-  timeLeft.value = uiStore.pollingDuration;
+  getQuote();
+  timeLeft.value = uiStore.pollingDuration - 1;
   uiStore.setPollingTimeLeft(timeLeft.value);
 
   pollingInterval = setInterval(() => {
@@ -60,6 +46,7 @@ onUnmounted(() => {
     clearInterval(pollingInterval);
     pollingInterval = null;
   }
+
   if (timerInterval) {
     clearInterval(timerInterval);
     timerInterval = null;

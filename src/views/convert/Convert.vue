@@ -20,6 +20,9 @@ import { useToast } from "primevue/usetoast";
 import type { InputNumberInputEvent } from "primevue/inputnumber";
 import { formatCurrency } from "@/utils/currency";
 import useTransaction from "@/use/useTransaction/useTransaction";
+import { useForm, useField } from "vee-validate";
+import { toTypedSchema } from "@vee-validate/zod";
+import { z } from "zod";
 
 const { t } = useI18n();
 const toast = useToast();
@@ -35,8 +38,39 @@ const latestMovements = ref([]);
 const userState = userStore();
 const quoteState = quoteStore();
 
-const brlBalance = ref<number | null>(null);
-const usdtBalance = ref<number | null>(null);
+const signinSchema = toTypedSchema(
+  z.object({
+    brlBalance: z
+      .number()
+      .refine(
+        (val) => {
+          const max = Number(userState.userData?.brl) ?? 0;
+          return val <= max;
+        },
+        {
+          error: `Saldo insuficiente`,
+        }
+      )
+      .gte(25, "O valor mínimo: R$25,00")
+      .nullable(),
+    usdtBalance: z.number().nullable(),
+  })
+);
+
+const { handleSubmit, meta } = useForm({
+  validationSchema: signinSchema,
+  initialValues: {
+    brlBalance: null,
+    usdtBalance: null,
+  },
+});
+
+const { value: brlBalance, errorMessage: brlBalanceError } = useField<
+  number | null
+>("brlBalance");
+const { value: usdtBalance, errorMessage: usdtBalanceError } = useField<
+  number | null
+>("usdtBalance");
 
 const showMinBalanceConvert = () => {
   toast.add({
@@ -48,27 +82,29 @@ const showMinBalanceConvert = () => {
 };
 
 const amoountBRL = computed(() => {
-  const brlAmount = userState.userData?.brl || 0;
+  const brlAmount = Number(userState.userData?.brl || 0);
 
   return `${brlAmount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}`;
 });
 
-const amoountBRLShown = computed(() => {
-  if (hiddenFrom.value) {
-    return "••••••";
-  }
+const amoountUSDTShown = computed(() => {
+  const usdtAmount = Number(userState.userData?.usdt || 0);
 
-  return `${amoountBRL.value}`;
+  return formatCurrency({
+    value: usdtAmount,
+    symbol: "$",
+    hiddenValues: hiddenTo.value,
+  });
 });
 
-const amoountUSDTShown = computed(() => {
-  const usdtAmount = userState.userData?.usdt || 0;
+const amoountBRLShown = computed(() => {
+  const brlAmount = Number(userState.userData?.brl || 0);
 
-  if (hiddenTo.value) {
-    return "••••••";
-  }
-
-  return `${usdtAmount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}`;
+  return formatCurrency({
+    value: brlAmount,
+    symbol: "R$",
+    hiddenValues: hiddenFrom.value,
+  });
 });
 
 const getFormatDate = (dateStr: string) => {
@@ -80,7 +116,7 @@ const getFormatTime = (dateStr: string) => {
 };
 
 const changeAmountBalanceToMax = () => {
-  brlBalance.value = userState.userData?.brl || 0;
+  brlBalance.value = Number(userState.userData?.brl) || 0;
   onChangeBalance({ value: brlBalance.value } as InputNumberInputEvent);
 };
 
@@ -97,18 +133,20 @@ const updateAmount = async () => {
   }
 };
 
-const convertBalance = () => {
+const convertBalance = handleSubmit(() => {
   if ((brlBalance.value || 0) < 25) {
     showMinBalanceConvert();
     return;
   }
 
   // Logic to convert balance goes here
-};
+});
 
 const onChangeBalance = (event: InputNumberInputEvent) => {
   const inputValue = Number(event.value || 0);
-  const dolarQuote = Number(quoteState.quoteData?.offer_price || 0);
+  const dolarQuote = Number(quoteState.quoteData?.price || 0);
+
+  brlBalance.value = inputValue;
   usdtBalance.value = inputValue / dolarQuote;
 };
 
@@ -117,8 +155,14 @@ const resultConvertedAmount = computed(() => {
 });
 
 const newWalletBalanceUSDT = computed(() => {
-  const currentUSDT = userState.userData?.usdt || 0;
+  const currentUSDT = Number(userState.userData?.usdt) || 0;
   return currentUSDT + (usdtBalance.value || 0);
+});
+
+const brlAmountError = computed(() => {
+  return !!brlBalanceError.value
+    ? brlBalanceError.value
+    : t("convert.min_value", { value: "R$25,00" });
 });
 
 const getLatestMovements = async () => {
@@ -185,9 +229,7 @@ onMounted(() => {
             </div>
           </div>
           <div class="flex mt-4">
-            <span class="text-2xl text-white">
-              {{ formatCurrency({ value: Number(amoountBRLShown) }) }}</span
-            >
+            <span class="text-2xl text-white"> {{ amoountBRLShown }}</span>
           </div>
         </div>
 
@@ -221,13 +263,7 @@ onMounted(() => {
             </div>
           </div>
           <div class="flex mt-4">
-            <span class="text-2xl text-white">{{
-              formatCurrency({
-                value: Number(amoountUSDTShown),
-                localeString: "en-US",
-                symbol: "$",
-              })
-            }}</span>
+            <span class="text-2xl text-white">{{ amoountUSDTShown }}</span>
           </div>
         </div>
       </div>
@@ -242,7 +278,7 @@ onMounted(() => {
                 <InputNumber
                   :minFractionDigits="2"
                   :maxFractionDigits="4"
-                  v-model="brlBalance"
+                  :modelValue="brlBalance"
                   @input="(e) => onChangeBalance(e)"
                   placeholder="Price"
                   class="flex-1 lg:flex-initial lg:w-full"
@@ -251,7 +287,12 @@ onMounted(() => {
                     pcinputtext: { root: { class: 'min-w-[100px]!' } },
                   }"
                 />
-                <p class="mt-1 text-xs">
+
+                <p v-if="!!brlBalanceError" class="mt-1 text-xs text-red-400">
+                  {{ brlBalanceError }}
+                </p>
+
+                <p v-else class="mt-1 text-xs">
                   {{ t("convert.min_value", { value: "R$25,00" }) }}
                 </p>
               </div>
@@ -311,7 +352,7 @@ onMounted(() => {
                 size="small"
                 :label="t('common.converter_button')"
                 class="min-w-[130px] w-min hidden! lg:block! self-end!"
-                :disabled="!brlBalance"
+                :disabled="!brlBalance || !!brlBalanceError"
                 @click="convertBalance"
               />
             </div>
@@ -350,7 +391,7 @@ onMounted(() => {
             <span>
               {{
                 formatCurrency({
-                  value: Number(quoteState?.quoteData?.offer_price || 0),
+                  value: Number(quoteState?.quoteData?.price || 0),
                 })
               }}</span
             >

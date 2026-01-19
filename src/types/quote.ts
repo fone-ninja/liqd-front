@@ -7,16 +7,10 @@ export interface QuoteDTO {
 }
 
 export interface QuoteResponse {
-  id: number;
-  quote_id: string;
-  offer_price: string;
-  unit_price: string;
-  created_at_api: string;
-  due_at_api: string;
-  user_id: number;
-  amount: number;
-  updated_at: string;
-  created_at: string;
+  source: string;
+  price: number;
+  symbol: string;
+  time: string;
 }
 
 export type Quote = QuoteResponse & {};

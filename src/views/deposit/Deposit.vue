@@ -32,7 +32,7 @@ const getFormatTime = (dateStr: string) => {
 };
 
 const brlAmount = computed(() => {
-  const localBRLAmount = userState.userData?.brl || 0;
+  const localBRLAmount = Number(userState.userData?.brl || 0);
 
   return localBRLAmount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,");
 });
