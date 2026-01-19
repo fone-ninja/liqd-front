@@ -1,4 +1,8 @@
-import type { QuoteResponse, QuoteDTO } from "@/types/quote";
+import type {
+  QuoteResponse,
+  QuoteCreationDTO,
+  QuoteCreationResponse,
+} from "@/types/quote";
 import http from "@/utils/http";
 
 export const getLiveCotation = (params: object) => {
@@ -11,6 +15,8 @@ export const getQuote = (): Promise<QuoteResponse> => {
   return http.get("/quote").then(({ data }) => data);
 };
 
-export const createQuote = (data: QuoteDTO): Promise<QuoteResponse> => {
+export const createQuote = (
+  data: QuoteCreationDTO
+): Promise<QuoteCreationResponse> => {
   return http.post("/quote", data).then(({ data }) => data);
 };

@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import * as quoteService from "@/services/quote/quoteService";
-import type { Quote, QuoteDTO } from "@/types/quote";
+import type { Quote, QuoteCreationDTO } from "@/types/quote";
 
 export type QuoteState = {
   quote: Quote | null;
@@ -19,10 +19,10 @@ export const quoteStore = defineStore("quote", {
         throw error;
       }
     },
-    async createQuote(quoteData: QuoteDTO) {
+    async createQuote(quoteData: QuoteCreationDTO) {
       try {
         const data = await quoteService.createQuote(quoteData);
-        this.setQuote(data);
+        return data;
       } catch (error) {
         throw error;
       }

@@ -1,7 +1,7 @@
 import http from "@/utils/http";
 
-export const createTransactions = () => {
-  return http.post("/transactions").then(({ data }) => data);
+export const createTransactions = (data) => {
+  return http.post("/transactions", data).then(({ data }) => data);
 };
 
 export const getTransaction = (transactionId: string) => {

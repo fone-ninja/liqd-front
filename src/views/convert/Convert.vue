@@ -5,6 +5,7 @@ import MovementTag from "@/components/movements/MovementTag.vue";
 import MovementCrypto from "@/components/movements/MovementCrypto.vue";
 import ConvertCrypto from "@/components/convert/ConvertCrypto.vue";
 import MovementModal from "@/components/movements/modal/MovementModal.vue";
+import ConvertModal from "@/components/convert/ConvertModal.vue";
 import {
   PhEye,
   PhEyeSlash,
@@ -27,6 +28,7 @@ import { z } from "zod";
 const { t } = useI18n();
 const toast = useToast();
 const showMovementModal = ref(false);
+const showConvertModal = ref(false);
 const movement = ref(null);
 const { getTransaction, getTransactions } = useTransaction();
 
@@ -81,10 +83,13 @@ const showMinBalanceConvert = () => {
   });
 };
 
-const amoountBRL = computed(() => {
+const amountBRL = computed(() => {
   const brlAmount = Number(userState.userData?.brl || 0);
 
-  return `${brlAmount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")}`;
+  return formatCurrency({
+    value: brlAmount,
+    symbol: "BRL",
+  });
 });
 
 const amoountUSDTShown = computed(() => {
@@ -139,7 +144,7 @@ const convertBalance = handleSubmit(() => {
     return;
   }
 
-  // Logic to convert balance goes here
+  showConvertModal.value = true;
 });
 
 const onChangeBalance = (event: InputNumberInputEvent) => {
@@ -157,12 +162,6 @@ const resultConvertedAmount = computed(() => {
 const newWalletBalanceUSDT = computed(() => {
   const currentUSDT = Number(userState.userData?.usdt) || 0;
   return currentUSDT + (usdtBalance.value || 0);
-});
-
-const brlAmountError = computed(() => {
-  return !!brlBalanceError.value
-    ? brlBalanceError.value
-    : t("convert.min_value", { value: "R$25,00" });
 });
 
 const getLatestMovements = async () => {
@@ -190,6 +189,13 @@ onMounted(() => {
 <template>
   <div class="px-8 py-4">
     <MovementModal v-model="showMovementModal" :movement />
+    <ConvertModal
+      v-if="showConvertModal"
+      v-model="showConvertModal"
+      :brlBalance
+      :quoteAmount="Number(quoteState?.quoteData?.price || 0)"
+      @update:getMovements="getLatestMovements"
+    />
 
     <h1 class="text-xl mb-2">
       <b class="text-white pb-2 border-b-2 border-white">{{
@@ -303,11 +309,7 @@ onMounted(() => {
             <div class="flex flex-col">
               <p>{{ t("convert.available") }}</p>
               <div class="flex justify-between">
-                <span class="text-white">
-                  {{
-                    formatCurrency({ value: Number(amoountBRL), symbol: "BRL" })
-                  }}</span
-                >
+                <span class="text-white"> {{ amountBRL }}</span>
                 <div
                   class="cursor-pointer text-[#E94F06]"
                   @click="changeAmountBalanceToMax"

@@ -1,14 +1,10 @@
 import * as quoteResource from "@/services/quote/quoteResource";
-import type { QuoteDTO } from "@/types/quote";
-
-export const getLiveCotation = ({ symbol = "USDTBRL" }) => {
-  return quoteResource.getLiveCotation({ symbol });
-};
+import type { QuoteCreationDTO } from "@/types/quote";
 
 export const getQuote = () => {
   return quoteResource.getQuote();
 };
 
-export const createQuote = (data: QuoteDTO) => {
+export const createQuote = (data: QuoteCreationDTO) => {
   return quoteResource.createQuote(data);
 };

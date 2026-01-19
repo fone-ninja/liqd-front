@@ -122,6 +122,7 @@ watch(
 );
 
 onMounted(() => {
+  updateBarWidth();
   startSpinner();
   getMovements();
   window.addEventListener("resize", updateBarWidth);

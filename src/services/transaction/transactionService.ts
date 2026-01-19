@@ -1,7 +1,7 @@
 import * as transactionResource from "@/services/transaction/transactionResource";
 
-export const createTransactions = () => {
-  return transactionResource.createTransactions();
+export const createTransactions = (data) => {
+  return transactionResource.createTransactions(data);
 };
 
 export const getTransaction = (transactionId: string) => {

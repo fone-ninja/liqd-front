@@ -1,9 +1,9 @@
 import * as transactionService from "@/services/transaction/transactionService";
 
 export default function useTransaction() {
-  const createTransactions = async () => {
+  const createTransactions = async (payload) => {
     try {
-      const data = await transactionService.createTransactions();
+      const data = await transactionService.createTransactions(payload);
       return data;
     } catch (error) {
       throw error;
